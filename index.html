@@ -1,21 +1,36 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Obrolans</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Caveat:wght@700&family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* Category themes set --t-paper, --t-paper-d, --t-back and --t-radius inline on <html>,
+   plus data-font and data-pattern. Without them (home screen) the defaults below apply. */
 :root{
-  --paper:#FAF6EF;
+  --paper:var(--t-paper, #FAF6EF);
   --ink:#2B2620;
   --ink-soft:#6b6257;
-  --card-back:#3a3229;
+  --card-back:var(--t-back, #3a3229);
   --shadow:rgba(43,38,32,.10);
   --accent:#6B8F71;
   --line:rgba(43,38,32,.14);
+  --radius:var(--t-radius, 18px);
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){ color-scheme:dark; --paper:#211d18; --ink:#f1ece2; --ink-soft:#a89e8f; --card-back:#141210; --shadow:rgba(0,0,0,.35); --line:rgba(241,236,226,.14); }
+  :root:not([data-theme="light"]){ color-scheme:dark; --paper:var(--t-paper-d, #211d18); --ink:#f1ece2; --ink-soft:#a89e8f; --card-back:var(--t-back, #141210); --shadow:rgba(0,0,0,.35); --line:rgba(241,236,226,.14); }
+  :root:not([data-theme="light"]) .cat-card{ background:var(--cat-paper-d, var(--paper)); }
 }
-:root[data-theme="dark"]{ color-scheme:dark; --paper:#211d18; --ink:#f1ece2; --ink-soft:#a89e8f; --card-back:#141210; --shadow:rgba(0,0,0,.35); --line:rgba(241,236,226,.14); }
+:root[data-theme="dark"]{ color-scheme:dark; --paper:var(--t-paper-d, #211d18); --ink:#f1ece2; --ink-soft:#a89e8f; --card-back:var(--t-back, #141210); --shadow:rgba(0,0,0,.35); --line:rgba(241,236,226,.14); }
+:root[data-theme="dark"] .cat-card{ background:var(--cat-paper-d, var(--paper)); }
+
+/* Font presets: on <html> for the active category, on each home card for its preview. */
+:root, [data-font]{
+  --display:'Fraunces',Georgia,serif; --display-style:normal; --display-weight:600; --display-scale:1;
+  --q-font:'Fraunces',Georgia,serif; --q-style:normal;
+}
+[data-font="serif-italic"]{ --display-style:italic; --q-style:italic; }
+[data-font="grotesk"]{ --display:'Bricolage Grotesque',system-ui,sans-serif; --display-weight:700; --q-font:'Bricolage Grotesque',system-ui,sans-serif; }
+[data-font="sans"]{ --display:'Inter',system-ui,sans-serif; --q-font:'Inter',system-ui,sans-serif; }
+[data-font="hand"]{ --display:'Caveat',cursive; --display-weight:700; --display-scale:1.3; }
 
 *{ box-sizing:border-box; }
 html,body{ min-height:100%; }
@@ -24,26 +39,28 @@ body{
   font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
   display:flex; flex-direction:column; align-items:center;
   padding:28px 18px 40px;
+  transition:background-color .5s ease;
 }
 h1{
-  font-family:'Fraunces',Georgia,serif; font-weight:600;
-  font-size:clamp(28px,7vw,38px); margin:4px 0 2px; letter-spacing:-0.01em;
+  font-family:var(--display); font-style:var(--display-style); font-weight:var(--display-weight);
+  font-size:calc(clamp(28px,7vw,38px) * var(--display-scale)); margin:4px 0 2px; letter-spacing:-0.01em;
 }
 .tagline{ color:var(--ink-soft); font-size:14px; margin:0 0 28px; text-align:center; max-width:340px; text-wrap:balance; }
-.screen{ width:100%; display:flex; flex-direction:column; align-items:center; }
+.screen{ width:100%; display:flex; flex-direction:column; align-items:center; animation:rise .35s ease both; }
+@keyframes rise{ from{ opacity:0; transform:translateY(8px); } }
 [hidden]{ display:none !important; }
 
 /* Home: audience cards */
 .cat-grid{ display:flex; flex-direction:column; gap:14px; width:min(360px,100%); }
 .cat-card{
   border:1.5px solid var(--cat-color); border-radius:18px; padding:20px;
-  text-align:left; cursor:pointer; background:var(--paper); color:inherit; font:inherit;
+  text-align:left; cursor:pointer; background:var(--cat-paper, var(--paper)); color:inherit; font:inherit;
   box-shadow:0 6px 20px var(--shadow);
   transition:transform .12s ease;
 }
 .cat-card:hover{ transform:translateY(-2px); }
 .cat-card:focus-visible{ outline:2px solid var(--cat-color); outline-offset:2px; }
-.cat-title{ font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:19px; margin-bottom:4px; color:var(--cat-color); }
+.cat-title{ font-family:var(--display); font-style:var(--display-style); font-weight:var(--display-weight); font-size:calc(19px * var(--display-scale)); margin-bottom:4px; color:var(--cat-color); }
 .cat-desc{ font-size:13px; color:var(--ink-soft); line-height:1.45; }
 .cat-meta{ font-size:12px; color:var(--ink-soft); margin-top:8px; }
 
@@ -63,13 +80,13 @@ h1{
 .deck-list{ display:flex; flex-direction:column; gap:10px; width:min(420px,100%); }
 .group-label{ font-size:12px; font-weight:600; color:var(--ink-soft); margin:10px 2px 0; }
 .deck-card{
-  border:1.5px solid var(--line); border-left:5px solid var(--deck-color); border-radius:14px;
+  border:1.5px solid var(--line); border-left:5px solid var(--deck-color); border-radius:calc(var(--radius) - 4px);
   padding:14px 16px; text-align:left; cursor:pointer; background:var(--paper); color:inherit; font:inherit;
   box-shadow:0 4px 14px var(--shadow); transition:transform .12s ease;
 }
 .deck-card:hover{ transform:translateY(-2px); }
 .deck-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
-.deck-name{ font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:17px; color:var(--ink); }
+.deck-name{ font-family:var(--display); font-style:var(--display-style); font-weight:var(--display-weight); font-size:calc(17px * var(--display-scale)); color:var(--ink); }
 .deck-count{ font-size:12px; color:var(--ink-soft); white-space:nowrap; font-variant-numeric:tabular-nums; }
 .deck-desc{ font-size:13px; color:var(--ink-soft); line-height:1.45; margin-top:3px; }
 .deck-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
@@ -84,13 +101,22 @@ h1{
 .stage{ perspective:1200px; width:min(320px,100%); height:420px; margin-bottom:26px; }
 .card{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .55s cubic-bezier(.4,.2,.2,1); cursor:pointer; }
 .card[data-flipped="true"]{ transform:rotateY(180deg); }
-.face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px; text-align:center; box-shadow:0 10px 30px var(--shadow); }
+.face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:var(--radius); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px; text-align:center; box-shadow:0 10px 30px var(--shadow); }
 .face.back{ background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 60%), var(--card-back); color:#e9e2d4; }
-.back .mark{ font-family:'Fraunces',Georgia,serif; font-style:italic; font-size:22px; border:1px solid rgba(233,226,212,.35); border-radius:999px; padding:10px 22px; }
+/* Card-back patterns, picked by a category's theme.pattern. */
+:root[data-pattern="glow"] .face.back{ background:radial-gradient(circle at 25% 20%, rgba(255,190,200,.22), transparent 55%), radial-gradient(circle at 80% 85%, rgba(255,255,255,.08), transparent 50%), var(--card-back); }
+:root[data-pattern="dots"] .face.back{ background:radial-gradient(rgba(255,255,255,.14) 2px, transparent 2.5px) 0 0/18px 18px, var(--card-back); }
+:root[data-pattern="gingham"] .face.back{ background:linear-gradient(90deg, rgba(255,255,255,.07) 50%, transparent 50%) 0 0/28px 28px, linear-gradient(rgba(255,255,255,.07) 50%, transparent 50%) 0 0/28px 28px, var(--card-back); }
+:root[data-pattern="grid"] .face.back{ background:linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px) 0 0/22px 22px, linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px) 0 0/22px 22px, var(--card-back); }
+:root[data-pattern="stripes"] .face.back{ background:repeating-linear-gradient(135deg, rgba(255,255,255,.09) 0 10px, transparent 10px 22px), var(--card-back); }
+:root[data-pattern="rings"] .face.back{ background:repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.08) 0 2px, transparent 2px 22px), var(--card-back); }
+:root[data-pattern="lines"] .face.back{ background:linear-gradient(90deg, transparent 34px, rgba(230,130,120,.4) 34px 36px, transparent 36px), repeating-linear-gradient(rgba(255,255,255,.09) 0 1px, transparent 1px 26px), var(--card-back); }
+.back .mark{ font-family:var(--display); font-style:italic; font-weight:var(--display-weight); font-size:calc(22px * var(--display-scale)); background:var(--card-back); border:1px solid rgba(233,226,212,.35); border-radius:999px; padding:10px 22px; }
+:root[data-font] .back .mark{ font-style:var(--display-style); }
 .back .hint{ margin-top:14px; font-size:12px; letter-spacing:.02em; color:rgba(233,226,212,.6); }
 .face.front{ background:var(--paper); border:1.5px solid var(--deck-color, var(--accent)); transform:rotateY(180deg); }
 .front .deck-label{ font-size:12px; font-weight:600; color:var(--deck-color, var(--accent)); margin-bottom:16px; }
-.front .question{ font-family:'Fraunces',Georgia,serif; font-weight:500; font-size:clamp(19px,4.6vw,23px); line-height:1.4; color:var(--ink); text-wrap:balance; }
+.front .question{ font-family:var(--q-font); font-style:var(--q-style); font-weight:500; font-size:clamp(19px,4.6vw,23px); line-height:1.4; color:var(--ink); text-wrap:balance; }
 .front .wild{
   font-size:13px; font-weight:600; line-height:1.4; color:var(--deck-color, var(--accent));
   border:1.5px dashed var(--deck-color, var(--accent)); border-radius:12px;
@@ -102,14 +128,14 @@ h1{
 
 .primary{
   font:600 15px 'Inter',system-ui,sans-serif; color:#fff;
-  background:var(--accent); border:none; padding:14px 26px; border-radius:12px; cursor:pointer;
+  background:var(--accent); border:none; padding:14px 26px; border-radius:calc(var(--radius) - 6px); cursor:pointer;
   transition:filter .15s ease, transform .1s ease;
 }
 .primary:hover{ filter:brightness(1.08); }
 .primary:active{ transform:scale(.97); }
 .primary:focus-visible, .deck-card:focus-visible, .tier-btn:focus-visible, .back-btn:focus-visible, .card:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
 .count{ margin-top:14px; font-size:12px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
-@media (prefers-reduced-motion: reduce){ .card, .cat-card, .deck-card{ transition:none; } }
+@media (prefers-reduced-motion: reduce){ .card, .cat-card, .deck-card, body{ transition:none; } .screen{ animation:none; } }
 </style>
 
 <h1>Obrolans</h1>
@@ -131,7 +157,7 @@ h1{
   <div class="stage">
     <div class="card" id="card" data-flipped="false" tabindex="0" role="button" aria-label="Balik kartu">
       <div class="face back">
-        <div class="mark">?</div>
+        <div class="mark" id="backMark">?</div>
         <div class="hint">ketuk untuk membalik</div>
       </div>
       <div class="face front" id="cardFront">
@@ -166,6 +192,12 @@ h1{
                                    dapat pertanyaan lanjutan.
    • tag (opsional)              → label pendek, mis. 'Game · 3+ orang'.
    • Warna                       → pakai nama dari PALETTE.
+   • Suasana kategori (theme)    → { paper, paperDark, back, font, pattern, radius, mark }
+                                   paper/paperDark = warna latar terang/gelap,
+                                   back = warna punggung kartu,
+                                   font = 'serif' | 'serif-italic' | 'grotesk' | 'sans' | 'hand',
+                                   pattern = 'glow' | 'dots' | 'gingham' | 'grid' | 'stripes' | 'rings' | 'lines',
+                                   radius = kebulatan sudut (px), mark = tulisan di punggung kartu.
    ===================================================================== */
 
 const PALETTE = {
@@ -249,6 +281,7 @@ const SHARED_DECKS = [
 const AUDIENCES = [
   { id:'pasangan', name:'Pasangan', color:'clay', pair:true,
     desc:'Buat kamu dan pasangan — dari kenalan lagi sampai ngobrolin masa depan.',
+    theme:{ paper:'#FBEFEC', paperDark:'#2A1D1F', back:'#6B2D3A', font:'serif-italic', pattern:'glow', radius:24, mark:'kita berdua' },
     decks:[
       { name:'Awal Cerita', color:'sage', depth:'ringan', desc:'Nostalgia dari awal kenal sampai jadian.', cards:[
         'Apa kesan pertamamu tentang aku?','Momen apa yang bikin kamu yakin mau lanjut lebih jauh sama aku?','Kebiasaan kecilku yang paling kamu suka apa?','Kalau harus ceritakan aku ke orang asing dalam satu kalimat, kamu bilang apa?','Apa hal pertama yang kamu perhatikan dari aku waktu itu?','Percakapan kita yang paling kamu ingat itu yang mana?','Ada yang bikin kamu ragu di awal nggak? Apa itu?','Menurutmu apa yang bikin hubungan kita beda dari yang lain?','Kapan kamu pertama kali mikir "ini bisa serius"?','Apa hal receh yang bikin kita jadi dekat?','Siapa yang lebih dulu naksir, menurutmu?','Apa yang bikin kamu penasaran sama aku waktu itu?','Momen canggung pertama kita yang kamu inget itu apa?','Apa yang kamu pikirkan pas kita jadian?','Kalau boleh ulang momen PDKT, apa yang mau kamu ubah?','Apa hal tentang aku yang ternyata beda dari kesan pertamamu?','Siapa yang lebih dulu bilang "aku sayang kamu"?','Apa yang bikin kamu yakin lanjut walau ada keraguan?','Tempat pertama kita jalan berdua, apa yang kamu inget dari situ?','Apa satu hal receh yang selalu kamu inget dari awal kita deket?'
@@ -269,6 +302,7 @@ const AUDIENCES = [
   },
   { id:'hangout', name:'Teman & Hangout', color:'blue',
     desc:'Buat nongkrong bareng temen — seru-seruan sampai ngobrol yang lebih dalam.',
+    theme:{ paper:'#EEF3FA', paperDark:'#192130', back:'#243A63', font:'grotesk', pattern:'dots', radius:14, mark:'gas!' },
     decks:[
       { name:'Kenalan Seru', color:'sage', depth:'ringan', desc:'Hobi, tempat favorit, dan hal yang lagi disuka.', cards:[
         'Hobi apa yang pengen banget kamu tekuni tapi belum sempat?','Kalau libur mendadak, kamu bakal ngapain?','Tempat nongkrong favoritmu di mana?','Film atau series apa yang bisa kamu tonton berkali-kali?','Kalau harus milih satu makanan buat seumur hidup, apa itu?','Apa hal yang bikin kamu excited belakangan ini?','Kalau bisa punya skill baru instan, kamu pilih apa?','Musim atau cuaca favoritmu apa dan kenapa?','Kalau dikasih waktu luang 1 jam, biasanya ngapain?','Aplikasi apa yang paling sering kamu buka?','Kalau bisa jalan-jalan ke satu kota sekarang, ke mana?','Apa hal kecil yang bikin harimu jadi lebih baik?','Kalau harus pilih, kopi atau teh? Kenapa?','Barang apa yang selalu kamu bawa ke mana-mana?','Kalau bisa ketemu satu tokoh publik, siapa itu?','Apa lagu yang lagi sering kamu putar ulang?','Kalau weekend ideal, kamu bakal ngapain aja?','Apa hal random yang kamu jago tapi jarang dipamerin?','Kalau harus pindah kota, kamu pilih ke mana?','Apa satu hal yang pengen banget kamu coba tahun ini?'
@@ -286,6 +320,7 @@ const AUDIENCES = [
   },
   { id:'keluarga', name:'Keluarga', color:'sage',
     desc:'Buat momen kumpul keluarga — cerita ringan sampai obrolan yang lebih dalam.',
+    theme:{ paper:'#F5F2E6', paperDark:'#1F211A', back:'#44573F', font:'serif', pattern:'gingham', radius:20, mark:'di rumah' },
     decks:[
       { name:'Cerita Rumah', color:'sage', depth:'ringan', desc:'Kebiasaan, masakan, dan tradisi keluarga.', cards:[
         'Kebiasaan keluarga apa yang paling kamu inget dari kecil?','Masakan rumah favoritmu apa?','Siapa di keluarga yang paling jago masak?','Liburan keluarga paling berkesan itu ke mana?','Kebiasaan lucu apa yang cuma ada di keluargamu?','Mainan masa kecil yang paling kamu inget apa?','Siapa yang paling cerewet di rumah?','Acara TV apa yang biasa ditonton bareng keluarga?','Tradisi lebaran atau tahun baru di keluargamu kayak gimana?','Panggilan sayang apa yang dipakai di rumah?','Siapa yang paling mirip sama kamu di keluarga?','Kebiasaan pagi hari di rumahmu kayak gimana?','Apa hewan peliharaan yang pernah dipelihara keluarga?','Siapa anggota keluarga yang paling suka cerita lucu?','Tempat kumpul favorit keluargamu di rumah di mana?','Kebiasaan makan malam di keluargamu gimana?','Apa julukan yang biasa dipakai buat manggil kamu di rumah?','Kegiatan apa yang rutin dilakuin bareng keluarga tiap minggu?','Cerita paling sering diulang-ulang di keluargamu apa?','Siapa yang paling sering ngatur acara keluarga?'
@@ -300,6 +335,7 @@ const AUDIENCES = [
   },
   { id:'kolega', name:'Kolega & Kerja', color:'plum',
     desc:'Buat cairin suasana kantor — kenalan santai sampai obrolan soal karier.',
+    theme:{ paper:'#F1F2F2', paperDark:'#1B1D20', back:'#2F3B48', font:'sans', pattern:'grid', radius:8, mark:'rehat kopi' },
     decks:[
       { name:'Kenalan Kantor', color:'amber', depth:'ringan', desc:'Kebiasaan kerja dan hal receh di kantor.', cards:[
         'Kebiasaan kerja apa yang bikin kamu paling produktif?','Ngopi atau ngeteh pas kerja, kamu tim yang mana?','Meja kerja kamu rapi atau berantakan?','Aplikasi kerja apa yang paling sering kamu buka?','Jam berapa kamu paling semangat kerja?','Kalau bisa kerja dari mana aja, kamu pilih di mana?','Snack favorit buat nemenin kerja apa?','Kalau meeting kelamaan, biasanya kamu ngapain diam-diam?','Kebiasaan aneh apa yang kamu punya pas kerja?','Playlist apa yang kamu putar pas lagi fokus kerja?','Kalau bisa skip satu jenis meeting selamanya, meeting apa itu?','Hari kerja favoritmu hari apa dan kenapa?','Apa hal kecil yang bikin harimu di kantor lebih baik?','Kalau ada waktu senggang di kantor, biasanya ngapain?','Kebiasaan makan siang kamu di kantor kayak gimana?','Kalau bisa tuker kerjaan sehari sama siapa aja, kamu pilih siapa?','Apa hal receh yang sering jadi bahan becandaan di kantor?','Kalau libur mendadak, hal pertama yang kamu lakuin apa?','Skill kerja apa yang pengen banget kamu kuasain?','Apa satu hal yang bikin kamu betah di tempat kerja sekarang?'
@@ -314,6 +350,7 @@ const AUDIENCES = [
   },
   { id:'pdkt', name:'PDKT / Baru Kenal', color:'brick', pair:true,
     desc:'Buat yang lagi deket sama orang baru — cair-cairan sampai obrolan yang lebih serius.',
+    theme:{ paper:'#FCF0E8', paperDark:'#2A1E19', back:'#9A4632', font:'grotesk', pattern:'stripes', radius:20, mark:'kenalan yuk' },
     decks:[
       { name:'Cair Dulu', color:'amber', depth:'ringan', desc:'First date, green flag, dan red flag receh.', cards:[
         'Apa yang bikin kamu tertarik buat kenalan sama aku?','Kalau first date ideal versi kamu, ngapain aja?','Apa hal pertama yang kamu perhatiin dari seseorang?','Red flag receh apa yang bikin kamu langsung mundur?','Green flag kecil apa yang bikin kamu makin tertarik?','Kalau lagi PDKT, kamu tipe yang gercep atau santai?','Apa yang bikin kamu nyaman ngobrol sama orang baru?','Kalau ditanya "kamu orangnya gimana", kamu jawab apa?','Apa hal yang biasanya bikin kamu deg-degan pas kenalan sama orang baru?','Kalau chat duluan, kamu tim yang mikir lama atau langsung kirim?','Apa first impression paling salah yang pernah orang kasih ke kamu?','Kalau lagi PDKT, hal apa yang bikin kamu makin penasaran?','Apa tempat ideal buat first date versi kamu?','Kalau lagi deket sama seseorang, kamu suka nunjukin perhatian lewat apa?','Apa yang bikin kamu yakin buat lanjut ke tahap yang lebih serius?','Kalau lagi PDKT, kamu lebih suka banyak nanya atau banyak cerita?','Apa hal kecil yang bisa bikin kamu naksir seseorang?','Kalau ketemu orang baru, kamu biasanya mulai obrolan dari topik apa?','Apa yang bikin kamu ilfeel duluan sama orang baru?','Kalau lagi deket, kamu lebih suka dikasih kejutan atau kepastian?'
@@ -325,6 +362,7 @@ const AUDIENCES = [
   },
   { id:'komunitas', name:'Komunitas / Kelompok Kecil', color:'teal',
     desc:'Buat komsel, persekutuan, atau retreat — pecah es sampai saling jaga.',
+    theme:{ paper:'#ECF4F2', paperDark:'#16211F', back:'#1F4F4B', font:'serif', pattern:'rings', radius:18, mark:'bareng-bareng' },
     decks:[
       { name:'Pecah Es', color:'amber', depth:'ringan', desc:'Kenalan dan cerita minggu ini.', cards:[
         'Gimana ceritanya kamu bisa gabung ke komunitas ini?','Kesibukan utamamu sehari-hari apa?','Apa hal yang lagi bikin kamu semangat minggu ini?','Kalau ada acara kumpul, kamu biasanya tim datang awal atau telat?','Satu fakta unik tentang kamu yang belum banyak orang tahu di sini?','Hobi apa yang lagi kamu tekuni sekarang?','Tempat favorit di kota ini buat kumpul rame-rame?','Kalau komunitas ini bikin acara, kamu pengen acaranya apa?','Peran apa yang biasanya kamu ambil di kelompok — pencair suasana, pendengar, atau penggerak?','Lagu apa yang pasti kamu nyanyiin kalau ada sesi nyanyi bareng?','Hal kecil apa yang bikin kamu ngerasa diterima di tempat baru?','Kalau kita pergi retreat, kamu pengen ke mana?','Siapa orang di kelompok ini yang pengen kamu kenal lebih dekat?','Kebiasaan mingguan apa yang bikin minggumu jalan?','Kamu tipe yang ngajak ngobrol duluan atau nunggu diajak?','Apa yang kamu harapkan dari kelompok ini tahun ini?','Hal apa yang bisa kamu tawarkan ke kelompok ini?','Kalau kelompok ini punya julukan, kamu usulin apa?','Momen kumpul paling seru yang pernah kamu alami di komunitas mana pun?','Satu kata yang menggambarkan minggumu?'
@@ -336,6 +374,7 @@ const AUDIENCES = [
   },
   { id:'diri', name:'Diri Sendiri', color:'gold', solo:true,
     desc:'Buat refleksi sendirian — catatan santai sampai ngobrol jujur sama diri sendiri.',
+    theme:{ paper:'#F6F1E4', paperDark:'#211F19', back:'#4E4335', font:'hand', pattern:'lines', radius:12, mark:'catatan' },
     decks:[
       { name:'Catatan Harian', color:'sage', depth:'ringan', desc:'Cek kabar singkat soal hari ini.', cards:[
         'Apa hal kecil yang bikin hari ini lumayan?','Apa yang lagi kamu dengerin atau tonton minggu ini?','Kalau hari ini dikasih judul, judulnya apa?','Tiga hal apa yang kamu syukuri hari ini?','Apa yang pengen kamu makan besok, dan kenapa?','Siapa yang pengen kamu kabarin sekarang?','Apa satu hal yang kamu selesaikan hari ini, sekecil apa pun?','Energimu hari ini dari skala 1 sampai 10 berapa, dan kenapa?','Apa hal baru yang kamu pelajari minggu ini?','Kalau besok libur, kamu mau ngapain?','Apa yang bikin kamu ketawa hari ini?','Barang apa yang lagi paling sering kamu pakai?','Tempat mana yang pengen kamu datengin bulan ini?','Kebiasaan kecil apa yang pengen kamu mulai minggu depan?','Apa yang bikin pagimu enak atau nggak enak hari ini?','Kalau bisa ngomong ke dirimu tadi pagi, kamu bilang apa?','Satu hal apa yang bisa kamu tunda tanpa masalah?','Apa yang lagi bikin kamu penasaran?','Momen apa hari ini yang pengen kamu inget?','Apa satu hal yang bisa bikin besok sedikit lebih baik?'
@@ -360,7 +399,8 @@ const ui = {
   card: $('card'), cardFront: $('cardFront'), frontLabel: $('frontDeckLabel'),
   frontQuestion: $('frontQuestion'), frontNum: $('frontNum'),
   frontWild: $('frontWild'), frontFollow: $('frontFollow'),
-  count: $('count'), drawBtn: $('drawBtn'), homeBtn: $('homeBtn'), decksBtn: $('decksBtn')
+  count: $('count'), drawBtn: $('drawBtn'), homeBtn: $('homeBtn'), decksBtn: $('decksBtn'),
+  backMark: $('backMark')
 };
 
 const state = { audience:null, depth:'semua', deck:null };
@@ -403,12 +443,28 @@ function showScreen(name){
   window.scrollTo(0, 0);
 }
 
+/* A category's theme restyles the whole page; null restores the neutral home look. */
+function applyTheme(audience){
+  const t = (audience && audience.theme) || {};
+  const root = document.documentElement;
+  const vars = { '--t-paper':t.paper, '--t-paper-d':t.paperDark, '--t-back':t.back,
+                 '--t-radius':t.radius == null ? null : t.radius + 'px' };
+  Object.entries(vars).forEach(([k, v]) => v == null ? root.style.removeProperty(k) : root.style.setProperty(k, v));
+  ['font', 'pattern'].forEach(k => { if(t[k]) root.dataset[k] = t[k]; else delete root.dataset[k]; });
+  ui.backMark.textContent = t.mark || '?';
+}
+
 /* ---------- Screens ---------- */
 
 function renderHome(){
   ui.audienceGrid.replaceChildren(...AUDIENCES.map(a => {
     const b = button('cat-card', '', () => openAudience(a));
     b.style.setProperty('--cat-color', color(a.color));
+    if(a.theme){ /* preview the category's look on its own card */
+      if(a.theme.paper) b.style.setProperty('--cat-paper', a.theme.paper);
+      if(a.theme.paperDark) b.style.setProperty('--cat-paper-d', a.theme.paperDark);
+      if(a.theme.font) b.dataset.font = a.theme.font;
+    }
     b.append(el('cat-title', a.name), el('cat-desc', a.desc),
              el('cat-meta', TEXT.deckCount(a.decks.length, sharedDecksFor(a).length)));
     return b;
@@ -416,6 +472,7 @@ function renderHome(){
 }
 
 function goHome(){
+  applyTheme(null);
   showScreen('home');
   ui.tagline.textContent = TEXT.homeTagline;
 }
@@ -423,6 +480,7 @@ function goHome(){
 function openAudience(audience){
   if(state.audience !== audience) state.depth = 'semua';
   state.audience = audience;
+  applyTheme(audience);
   renderDeckList();
   showScreen('decks');
   ui.tagline.textContent = TEXT.deckTagline(audience.name);
@@ -539,6 +597,13 @@ ui.decksBtn.addEventListener('click', backToDecks);
     if(!d.cards || !d.cards.length) console.warn('Dek "' + d.name + '" di ' + where + ' belum punya kartu.');
   };
   AUDIENCES.forEach(a => a.decks.forEach(d => check(d, a.name)));
+  const FONTS = ['serif', 'serif-italic', 'grotesk', 'sans', 'hand'];
+  const PATTERNS = ['glow', 'dots', 'gingham', 'grid', 'stripes', 'rings', 'lines'];
+  AUDIENCES.forEach(a => {
+    const t = a.theme || {};
+    if(t.font && !FONTS.includes(t.font)) console.warn('Kategori ' + a.name + ' pakai font tidak dikenal: ' + t.font);
+    if(t.pattern && !PATTERNS.includes(t.pattern)) console.warn('Kategori ' + a.name + ' pakai pattern tidak dikenal: ' + t.pattern);
+  });
   SHARED_DECKS.forEach(d => {
     check(d, 'topik umum');
     (d.for || []).forEach(id => { if(!audienceIds.has(id)) console.warn('Dek "' + d.name + '" pakai kategori tidak dikenal di for: ' + id); });

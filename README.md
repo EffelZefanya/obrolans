@@ -16,3 +16,4 @@ Semua konten ada di bagian `DATA` di dalam `index.html`:
 - **`depth`**: `'ringan'` atau `'dalam'`.
 - **`tag`** (opsional): label pendek, mis. `'Game · 3+ orang'`.
 - **Warna**: pakai nama dari `PALETTE`.
+- **Suasana kategori**: isi `theme` di kategori (warna latar, punggung kartu, font, pola, sudut, tulisan di punggung kartu). Pilihan font dan pola ada di komentar `DATA`.
