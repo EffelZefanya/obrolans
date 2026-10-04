@@ -1,20 +1,36 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Obrolans</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Caveat:wght@700&family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* Category themes set --t-paper, --t-paper-d, --t-back and --t-radius inline on <html>,
+   plus data-font and data-pattern. Without them (home screen) the defaults below apply. */
 :root{
-  --paper:#FAF6EF;
+  --paper:var(--t-paper, #FAF6EF);
   --ink:#2B2620;
   --ink-soft:#6b6257;
-  --card-back:#3a3229;
+  --card-back:var(--t-back, #3a3229);
   --shadow:rgba(43,38,32,.10);
   --accent:#6B8F71;
+  --line:rgba(43,38,32,.14);
+  --radius:var(--t-radius, 18px);
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){ color-scheme:dark; --paper:#211d18; --ink:#f1ece2; --ink-soft:#a89e8f; --card-back:#141210; --shadow:rgba(0,0,0,.35); }
+  :root:not([data-theme="light"]){ color-scheme:dark; --paper:var(--t-paper-d, #211d18); --ink:#f1ece2; --ink-soft:#a89e8f; --card-back:var(--t-back, #141210); --shadow:rgba(0,0,0,.35); --line:rgba(241,236,226,.14); }
+  :root:not([data-theme="light"]) .cat-card{ background:var(--cat-paper-d, var(--paper)); }
 }
-:root[data-theme="dark"]{ color-scheme:dark; --paper:#211d18; --ink:#f1ece2; --ink-soft:#a89e8f; --card-back:#141210; --shadow:rgba(0,0,0,.35); }
+:root[data-theme="dark"]{ color-scheme:dark; --paper:var(--t-paper-d, #211d18); --ink:#f1ece2; --ink-soft:#a89e8f; --card-back:var(--t-back, #141210); --shadow:rgba(0,0,0,.35); --line:rgba(241,236,226,.14); }
+:root[data-theme="dark"] .cat-card{ background:var(--cat-paper-d, var(--paper)); }
+
+/* Font presets: on <html> for the active category, on each home card for its preview. */
+:root, [data-font]{
+  --display:'Fraunces',Georgia,serif; --display-style:normal; --display-weight:600; --display-scale:1;
+  --q-font:'Fraunces',Georgia,serif; --q-style:normal;
+}
+[data-font="serif-italic"]{ --display-style:italic; --q-style:italic; }
+[data-font="grotesk"]{ --display:'Bricolage Grotesque',system-ui,sans-serif; --display-weight:700; --q-font:'Bricolage Grotesque',system-ui,sans-serif; }
+[data-font="sans"]{ --display:'Inter',system-ui,sans-serif; --q-font:'Inter',system-ui,sans-serif; }
+[data-font="hand"]{ --display:'Caveat',cursive; --display-weight:700; --display-scale:1.3; }
 
 *{ box-sizing:border-box; }
 html,body{ min-height:100%; }
@@ -23,37 +39,37 @@ body{
   font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
   display:flex; flex-direction:column; align-items:center;
   padding:28px 18px 40px;
+  transition:background-color .5s ease;
 }
 h1{
-  font-family:'Fraunces',Georgia,serif; font-weight:600;
-  font-size:clamp(28px,7vw,38px); margin:4px 0 2px; letter-spacing:-0.01em;
+  font-family:var(--display); font-style:var(--display-style); font-weight:var(--display-weight);
+  font-size:calc(clamp(28px,7vw,38px) * var(--display-scale)); margin:4px 0 2px; letter-spacing:-0.01em;
 }
 .tagline{ color:var(--ink-soft); font-size:14px; margin:0 0 28px; text-align:center; max-width:340px; text-wrap:balance; }
-.screen{ width:100%; display:flex; flex-direction:column; align-items:center; }
+.screen{ width:100%; display:flex; flex-direction:column; align-items:center; animation:rise .35s ease both; }
+@keyframes rise{ from{ opacity:0; transform:translateY(8px); } }
 [hidden]{ display:none !important; }
 
 /* Home: audience cards */
 .cat-grid{ display:flex; flex-direction:column; gap:14px; width:min(360px,100%); }
 .cat-card{
   border:1.5px solid var(--cat-color); border-radius:18px; padding:20px;
-  text-align:left; cursor:pointer; background:var(--paper); color:inherit; font:inherit;
+  text-align:left; cursor:pointer; background:var(--cat-paper, var(--paper)); color:inherit; font:inherit;
   box-shadow:0 6px 20px var(--shadow);
   transition:transform .12s ease;
 }
 .cat-card:hover{ transform:translateY(-2px); }
 .cat-card:focus-visible{ outline:2px solid var(--cat-color); outline-offset:2px; }
-.cat-title{ font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:19px; margin-bottom:4px; color:var(--cat-color); }
+.cat-title{ font-family:var(--display); font-style:var(--display-style); font-weight:var(--display-weight); font-size:calc(19px * var(--display-scale)); margin-bottom:4px; color:var(--cat-color); }
 .cat-desc{ font-size:13px; color:var(--ink-soft); line-height:1.45; }
 .cat-meta{ font-size:12px; color:var(--ink-soft); margin-top:8px; }
 
-/* Deck screen */
+/* Deck list screen */
 .topbar{ width:min(420px,100%); margin-bottom:6px; }
 .back-btn{ background:none; border:none; color:var(--ink-soft); font:13px 'Inter',system-ui,sans-serif; cursor:pointer; padding:6px 0; }
 .back-btn:hover{ color:var(--ink); }
 
-.tier-toggle{ display:flex; flex-direction:column; align-items:center; gap:10px; margin:6px 0 16px; max-width:440px; }
-.topic-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; }
-.topic-label{ font-size:12px; color:var(--ink-soft); margin-bottom:-4px; }
+.depth-filter{ display:flex; gap:6px; justify-content:center; margin:2px 0 14px; }
 .tier-btn{
   border:1.5px solid var(--ink-soft); background:transparent; color:var(--ink-soft);
   font:600 13px 'Inter',system-ui,sans-serif;
@@ -61,25 +77,46 @@ h1{
 }
 .tier-btn[data-active="true"]{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
 
-.decks{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:420px; margin:0 0 26px; }
-.deck-btn{
-  border:1.5px solid transparent; background:transparent; color:var(--ink-soft);
-  font:500 14px 'Inter',system-ui,sans-serif;
-  padding:8px 14px; border-radius:999px; cursor:pointer; transition:all .15s ease;
+.deck-list{ display:flex; flex-direction:column; gap:10px; width:min(420px,100%); }
+.group-label{ font-size:12px; font-weight:600; color:var(--ink-soft); margin:10px 2px 0; }
+.deck-card{
+  border:1.5px solid var(--line); border-left:5px solid var(--deck-color); border-radius:calc(var(--radius) - 4px);
+  padding:14px 16px; text-align:left; cursor:pointer; background:var(--paper); color:inherit; font:inherit;
+  box-shadow:0 4px 14px var(--shadow); transition:transform .12s ease;
 }
-.deck-btn[data-active="true"]{ color:#fff; background:var(--deck-color); border-color:var(--deck-color); }
-.deck-btn:not([data-active="true"]):hover{ border-color:var(--deck-color); color:var(--ink); }
+.deck-card:hover{ transform:translateY(-2px); }
+.deck-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+.deck-name{ font-family:var(--display); font-style:var(--display-style); font-weight:var(--display-weight); font-size:calc(17px * var(--display-scale)); color:var(--ink); }
+.deck-count{ font-size:12px; color:var(--ink-soft); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.deck-desc{ font-size:13px; color:var(--ink-soft); line-height:1.45; margin-top:3px; }
+.deck-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
+.badge{ font-size:11px; font-weight:600; padding:2px 9px; border-radius:999px; border:1px solid var(--ink-soft); color:var(--ink-soft); }
+.badge.dalam{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
+.badge.tag{ border-style:dashed; border-color:var(--deck-color); color:var(--deck-color); }
+
+/* Play screen */
+.crumb{ font-size:13px; color:var(--ink-soft); margin:0 0 18px; text-align:center; }
+.crumb b{ color:var(--ink); font-weight:600; }
 
 .stage{ perspective:1200px; width:min(320px,100%); height:420px; margin-bottom:26px; }
 .card{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .55s cubic-bezier(.4,.2,.2,1); cursor:pointer; }
 .card[data-flipped="true"]{ transform:rotateY(180deg); }
-.face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px; text-align:center; box-shadow:0 10px 30px var(--shadow); }
+.face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:var(--radius); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px; text-align:center; box-shadow:0 10px 30px var(--shadow); }
 .face.back{ background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 60%), var(--card-back); color:#e9e2d4; }
-.back .mark{ font-family:'Fraunces',Georgia,serif; font-style:italic; font-size:22px; border:1px solid rgba(233,226,212,.35); border-radius:999px; padding:10px 22px; }
+/* Card-back patterns, picked by a category's theme.pattern. */
+:root[data-pattern="glow"] .face.back{ background:radial-gradient(circle at 25% 20%, rgba(255,190,200,.22), transparent 55%), radial-gradient(circle at 80% 85%, rgba(255,255,255,.08), transparent 50%), var(--card-back); }
+:root[data-pattern="dots"] .face.back{ background:radial-gradient(rgba(255,255,255,.14) 2px, transparent 2.5px) 0 0/18px 18px, var(--card-back); }
+:root[data-pattern="gingham"] .face.back{ background:linear-gradient(90deg, rgba(255,255,255,.07) 50%, transparent 50%) 0 0/28px 28px, linear-gradient(rgba(255,255,255,.07) 50%, transparent 50%) 0 0/28px 28px, var(--card-back); }
+:root[data-pattern="grid"] .face.back{ background:linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px) 0 0/22px 22px, linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px) 0 0/22px 22px, var(--card-back); }
+:root[data-pattern="stripes"] .face.back{ background:repeating-linear-gradient(135deg, rgba(255,255,255,.09) 0 10px, transparent 10px 22px), var(--card-back); }
+:root[data-pattern="rings"] .face.back{ background:repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.08) 0 2px, transparent 2px 22px), var(--card-back); }
+:root[data-pattern="lines"] .face.back{ background:linear-gradient(90deg, transparent 34px, rgba(230,130,120,.4) 34px 36px, transparent 36px), repeating-linear-gradient(rgba(255,255,255,.09) 0 1px, transparent 1px 26px), var(--card-back); }
+.back .mark{ font-family:var(--display); font-style:italic; font-weight:var(--display-weight); font-size:calc(22px * var(--display-scale)); background:var(--card-back); border:1px solid rgba(233,226,212,.35); border-radius:999px; padding:10px 22px; }
+:root[data-font] .back .mark{ font-style:var(--display-style); }
 .back .hint{ margin-top:14px; font-size:12px; letter-spacing:.02em; color:rgba(233,226,212,.6); }
 .face.front{ background:var(--paper); border:1.5px solid var(--deck-color, var(--accent)); transform:rotateY(180deg); }
 .front .deck-label{ font-size:12px; font-weight:600; color:var(--deck-color, var(--accent)); margin-bottom:16px; }
-.front .question{ font-family:'Fraunces',Georgia,serif; font-weight:500; font-size:clamp(19px,4.6vw,23px); line-height:1.4; color:var(--ink); text-wrap:balance; }
+.front .question{ font-family:var(--q-font); font-style:var(--q-style); font-weight:500; font-size:clamp(19px,4.6vw,23px); line-height:1.4; color:var(--ink); text-wrap:balance; }
 .front .wild{
   font-size:13px; font-weight:600; line-height:1.4; color:var(--deck-color, var(--accent));
   border:1.5px dashed var(--deck-color, var(--accent)); border-radius:12px;
@@ -91,14 +128,14 @@ h1{
 
 .primary{
   font:600 15px 'Inter',system-ui,sans-serif; color:#fff;
-  background:var(--accent); border:none; padding:14px 26px; border-radius:12px; cursor:pointer;
+  background:var(--accent); border:none; padding:14px 26px; border-radius:calc(var(--radius) - 6px); cursor:pointer;
   transition:filter .15s ease, transform .1s ease;
 }
 .primary:hover{ filter:brightness(1.08); }
 .primary:active{ transform:scale(.97); }
-.primary:focus-visible, .deck-btn:focus-visible, .tier-btn:focus-visible, .back-btn:focus-visible, .card:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.primary:focus-visible, .deck-card:focus-visible, .tier-btn:focus-visible, .back-btn:focus-visible, .card:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
 .count{ margin-top:14px; font-size:12px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
-@media (prefers-reduced-motion: reduce){ .card, .cat-card{ transition:none; } }
+@media (prefers-reduced-motion: reduce){ .card, .cat-card, .deck-card, body{ transition:none; } .screen{ animation:none; } }
 </style>
 
 <h1>Obrolans</h1>
@@ -109,13 +146,18 @@ h1{
 </section>
 
 <section class="screen" id="deckScreen" hidden>
-  <div class="topbar"><button class="back-btn" id="backBtn" type="button">← Pilih kategori lain</button></div>
-  <div class="tier-toggle" id="topicToggle"></div>
-  <div class="decks" id="deckPicker"></div>
+  <div class="topbar"><button class="back-btn" id="homeBtn" type="button">← Ganti kategori</button></div>
+  <div class="depth-filter" id="depthFilter" role="group" aria-label="Kedalaman"></div>
+  <div class="deck-list" id="deckList"></div>
+</section>
+
+<section class="screen" id="playScreen" hidden>
+  <div class="topbar"><button class="back-btn" id="decksBtn" type="button">← Ganti dek</button></div>
+  <div class="crumb" id="crumb"></div>
   <div class="stage">
     <div class="card" id="card" data-flipped="false" tabindex="0" role="button" aria-label="Balik kartu">
       <div class="face back">
-        <div class="mark">?</div>
+        <div class="mark" id="backMark">?</div>
         <div class="hint">ketuk untuk membalik</div>
       </div>
       <div class="face front" id="cardFront">
@@ -135,14 +177,27 @@ h1{
 /* =====================================================================
    DATA — semua konten ada di sini. Kode di bawah membaca data ini.
 
+   Alurnya dua langkah: pilih kategori (sama siapa), lalu pilih dek.
+
    Cara menambah:
    • Kategori baru (sama siapa)  → tambah satu objek di AUDIENCES.
-   • Topik baru per kategori     → tambah di TOPICS, lalu pakai
-                                   topic:'<id>' di dek kategori mana pun.
-   • Topik bersama (semua kategori) → tambah di TOPICS dengan
-                                   shared:true dan isi decks di situ.
-   • Dek baru                    → tambah objek { name, color, topic, cards }.
+                                   solo:true = sendirian (tanpa wildcard),
+                                   pair:true = berdua (tanpa wildcard grup).
+   • Dek khusus satu kategori    → tambah { name, color, depth, desc, cards }
+                                   di decks kategori itu.
+   • Dek umum (lintas kategori)  → tambah di SHARED_DECKS. Isi for:['id', ...]
+                                   untuk membatasi ke kategori tertentu, atau
+                                   hapus for supaya muncul di semua kategori.
+   • depth                       → 'ringan' atau 'dalam'. Dek 'dalam' otomatis
+                                   dapat pertanyaan lanjutan.
+   • tag (opsional)              → label pendek, mis. 'Game · 3+ orang'.
    • Warna                       → pakai nama dari PALETTE.
+   • Suasana kategori (theme)    → { paper, paperDark, back, font, pattern, radius, mark }
+                                   paper/paperDark = warna latar terang/gelap,
+                                   back = warna punggung kartu,
+                                   font = 'serif' | 'serif-italic' | 'grotesk' | 'sans' | 'hand',
+                                   pattern = 'glow' | 'dots' | 'gingham' | 'grid' | 'stripes' | 'rings' | 'lines',
+                                   radius = kebulatan sudut (px), mark = tulisan di punggung kartu.
    ===================================================================== */
 
 const PALETTE = {
@@ -151,26 +206,35 @@ const PALETTE = {
 };
 
 const TEXT = {
-  homeTagline: 'Pilih kategori, lalu pilih dek untuk mulai ngobrol.',
-  deckTagline: name => name + ' — kocok dan ambil satu kartu.',
+  homeTagline: 'Mau ngobrol sama siapa?',
+  deckTagline: name => name + ' — pilih dek untuk mulai.',
+  ownDecks: name => 'Khusus ' + name,
+  sharedDecks: 'Topik umum',
+  allDepths: 'Semua',
+  depths: { ringan:'Ringan', dalam:'Dalam' },
+  deckCount: (own, shared) => own + ' dek khusus · ' + shared + ' topik umum',
+  cardCount: n => n + ' kartu',
+  noDecks: 'Belum ada dek dengan kedalaman ini.',
   remaining: n => n + ' kartu tersisa di dek ini',
   empty: 'Semua kartu di dek ini sudah diambil. Ambil lagi untuk kocok ulang.',
-  sharedTopicsLabel: 'Topik bersama',
   wildcardTitle: 'Wildcard',
   followUpPrefix: 'Lanjutan: '
 };
 
-/* Wildcard: kadang kartu dapat twist. Tidak muncul di kategori dengan solo:true. */
+/* Wildcard: kadang kartu dapat twist. Tidak muncul di kategori solo:true;
+   kategori pair:true hanya dapat WILDCARDS, tanpa GROUP_WILDCARDS. */
 const WILDCARD_CHANCE = 1/6;
 const WILDCARDS = [
   'Semua orang jawab pertanyaan ini.',
-  'Orang lain tebak jawabanmu dulu, baru kamu jawab.',
+  'Orang lain tebak jawabanmu dulu, baru kamu jawab.'
+];
+const GROUP_WILDCARDS = [
   'Pilih satu orang untuk jawab pertanyaan ini.',
   'Orang di sebelah kirimu jawab untukmu, lalu kamu koreksi.',
   'Jawab, lalu lempar pertanyaan yang sama ke orang pilihanmu.'
 ];
 
-/* Pertanyaan lanjutan untuk dek deep. Satu kartu bisa punya lanjutan sendiri:
+/* Pertanyaan lanjutan untuk dek depth:'dalam'. Satu kartu bisa punya lanjutan sendiri:
    tulis kartunya sebagai { q:'Pertanyaan?', follow:'Lanjutan?' }. */
 const FOLLOW_UPS = [
   'Kenapa?',
@@ -181,154 +245,141 @@ const FOLLOW_UPS = [
   'Apa artinya itu buat kamu sekarang?'
 ];
 
-/* Topik: yang tanpa shared diisi per kategori (tombol hanya muncul kalau kategori itu punya deknya);
-   yang shared:true sama isinya untuk semua kategori. Dek topik 'deep' otomatis dapat pertanyaan lanjutan;
-   dek lain bisa ditandai deep:true. */
-const TOPICS = [
-  { id:'light', label:'Light' },
-  { id:'deep',  label:'Deep' },
-  { id:'nikah', label:'Menuju Nikah' },
-  { id:'orangtua', label:'Cerita Orang Tua' },
-  { id:'tim', label:'Kerja Bareng' },
-  { id:'kebiasaan', label:'Kebiasaan & Selera', shared:true, decks:[
-    { name:'Suka & Nggak Suka', color:'amber', cards:[
-      'Makanan apa yang paling kamu benci tapi orang lain suka banget?','Kebiasaan orang lain yang paling bikin kamu risih apa?','Apa satu hal yang kamu suka tapi jarang kamu akuin ke orang?','Kebiasaan kamu sendiri yang paling susah dihilangin apa?','Apa genre musik yang paling nggak kamu suka?','Kebiasaan pagi yang nggak bisa kamu lewatin apa?','Apa satu makanan yang bisa kamu makan tiap hari tanpa bosan?','Kebiasaan orang di transportasi umum yang paling kamu benci apa?','Apa hal kecil yang bisa langsung bikin mood kamu jelek?','Kebiasaan unik apa yang cuma kamu yang punya?','Apa satu hal yang orang suka tapi kamu nggak paham kenapa disukai?','Kebiasaan belanja kamu kayak gimana — impulsif atau mikir dulu?','Apa warna yang paling nggak kamu suka?','Kebiasaan nonton kamu — suka spoiler duluan atau nggak?','Apa satu hal sepele yang bisa bikin kamu langsung ilfeel sama orang?','Kebiasaan makan kamu yang paling aneh menurut orang lain apa?','Apa hal yang selalu kamu lakuin sebelum tidur?','Kebiasaan kamu kalau lagi stres ngapain?','Apa satu hobi orang lain yang bikin kamu mikir "ngapain sih"?','Kebiasaan kamu yang paling sering dikomentarin temen apa?'
-    ]},
-    { name:'Kebiasaan Tersembunyi', color:'teal', deep:true, cards:[
-      'Kebiasaan apa yang kamu punya tapi malu buat ngaku?','Apa satu ketidaksukaan kamu yang sebenarnya berakar dari pengalaman masa lalu?','Kebiasaan apa yang kamu tau nggak sehat tapi susah kamu tinggalin?','Apa hal yang kamu suka justru karena itu bikin kamu ngerasa aman?','Kebiasaan siapa di lingkaran pertemanan yang diam-diam kamu tiru?','Apa satu preferensi kamu yang berubah drastis seiring waktu?','Kebiasaan apa yang muncul kalau kamu lagi nggak baik-baik aja?','Apa hal yang kamu benci tapi tetap kamu lakuin demi orang lain?','Kebiasaan apa dari keluarga yang tanpa sadar udah nempel di kamu?','Apa satu kesukaan kamu yang jarang kamu bagi karena takut dihakimi?','Kebiasaan apa yang bikin kamu ngerasa paling jadi diri sendiri?','Apa hal yang kamu suka dari kesendirian?','Kebiasaan apa yang kamu ubah demi seseorang yang penting buat kamu?','Apa satu hal yang kamu benci tentang dirimu sendiri?','Kebiasaan apa yang bikin kamu ngerasa paling produktif dan tenang?','Apa preferensi kamu soal cara orang menunjukkan sayang ke kamu?','Kebiasaan apa yang kamu harap orang lain lebih mengerti dari kamu?','Apa satu hal yang kamu suka sekarang tapi dulu kamu benci?','Kebiasaan apa yang paling menggambarkan siapa kamu sebenarnya?','Apa satu ketidaksukaan kamu yang paling sering disalahpahami orang lain?'
-    ]}
+/* Dek umum: muncul di bawah "Topik umum" di setiap kategori yang ada di for
+   (atau di semua kategori kalau for tidak diisi). */
+const SHARED_DECKS = [
+  { name:'Suka & Nggak Suka', color:'amber', depth:'ringan', desc:'Selera, kebiasaan, dan hal yang bikin risih.', cards:[
+    'Makanan apa yang paling kamu benci tapi orang lain suka banget?','Kebiasaan orang lain yang paling bikin kamu risih apa?','Apa satu hal yang kamu suka tapi jarang kamu akuin ke orang?','Kebiasaan kamu sendiri yang paling susah dihilangin apa?','Apa genre musik yang paling nggak kamu suka?','Kebiasaan pagi yang nggak bisa kamu lewatin apa?','Apa satu makanan yang bisa kamu makan tiap hari tanpa bosan?','Kebiasaan orang di transportasi umum yang paling kamu benci apa?','Apa hal kecil yang bisa langsung bikin mood kamu jelek?','Kebiasaan unik apa yang cuma kamu yang punya?','Apa satu hal yang orang suka tapi kamu nggak paham kenapa disukai?','Kebiasaan belanja kamu kayak gimana — impulsif atau mikir dulu?','Apa warna yang paling nggak kamu suka?','Kebiasaan nonton kamu — suka spoiler duluan atau nggak?','Apa satu hal sepele yang bisa bikin kamu langsung ilfeel sama orang?','Kebiasaan makan kamu yang paling aneh menurut orang lain apa?','Apa hal yang selalu kamu lakuin sebelum tidur?','Kebiasaan kamu kalau lagi stres ngapain?','Apa satu hobi orang lain yang bikin kamu mikir "ngapain sih"?','Kebiasaan kamu yang paling sering dikomentarin temen apa?'
   ]},
-  { id:'iman', label:'Iman & Kristen', shared:true, decks:[
-    { name:'Cerita Iman', color:'blue', cards:[
-      'Kapan pertama kali kamu ngerasa dekat sama Tuhan?','Ayat Alkitab apa yang paling nempel di hati kamu?','Lagu rohani apa yang paling sering kamu putar?','Momen apa yang bikin imanmu makin kuat?','Kebiasaan apa yang kamu lakuin buat jaga waktu sama Tuhan?','Gereja mana yang paling berkesan buat kamu, dan kenapa?','Siapa yang paling banyak membentuk imanmu — orang tua, guru sekolah minggu, atau siapa?','Apa doa yang paling sering kamu ucapkan belakangan ini?','Kalau lagi baca Alkitab, kamu suka mulai dari kitab apa?','Apa momen kecil yang kamu anggap jawaban doa?','Kegiatan pelayanan apa yang paling kamu senangi?','Apa firman Tuhan yang lagi relate banget sama hidupmu sekarang?','Kebiasaan rohani apa yang pengen banget kamu bangun?','Apa lagu pujian yang selalu bikin kamu merinding?','Momen ibadah apa yang paling kamu kangenin?','Apa hal kecil yang bikin kamu bersyukur hari ini?','Siapa tokoh Alkitab yang paling kamu suka, dan kenapa?','Apa yang biasanya kamu lakuin buat renungan pribadi?','Kapan terakhir kali kamu ngerasa didengar sama Tuhan?','Apa harapanmu buat perjalanan imanmu tahun ini?'
-    ]},
-    { name:'Renungan Bersama', color:'gold', deep:true, cards:[
-      'Apa keraguan terbesar soal iman yang pernah kamu alami?','Bagaimana caramu menghadapi masa-masa jauh dari Tuhan?','Apa pergumulan rohani yang lagi kamu hadapi sekarang?','Apa yang bikin kamu sulit percaya sama rencana Tuhan di masa sulit?','Bagaimana pandanganmu soal pengampunan dalam iman Kristen?','Apa satu hal dalam Alkitab yang masih sulit kamu pahami?','Bagaimana caramu menyeimbangkan iman dan tantangan hidup sehari-hari?','Apa yang kamu pelajari dari masa-masa gelap dalam perjalanan imanmu?','Bagaimana caramu mendengar suara Tuhan dalam keputusan besar?','Apa artinya kasih karunia buat kamu secara pribadi?','Bagaimana caramu memaknai penderitaan dalam terang iman?','Apa yang kamu harap bisa berubah dalam hubunganmu dengan Tuhan?','Bagaimana caramu menjaga iman tetap hidup di tengah kesibukan?','Apa satu keputusan hidup yang kamu ambil berdasarkan iman?','Bagaimana caramu memandang komunitas gereja dalam pertumbuhan rohanimu?','Apa yang bikin kamu takut untuk lebih terbuka soal iman ke orang lain?','Bagaimana caramu memahami kehendak Tuhan yang kadang berbeda dari rencanamu?','Apa satu hal yang ingin kamu wariskan soal iman ke generasi berikutnya?','Bagaimana perjalanan imanmu memengaruhi caramu mencintai orang lain?','Apa harapan terbesarmu soal hubunganmu dengan Tuhan ke depan?'
-    ]}
+  { name:'Kebiasaan Tersembunyi', color:'teal', depth:'dalam', desc:'Kebiasaan yang jarang diakui dan asal-usulnya.', for:['pasangan','hangout','keluarga','pdkt','komunitas','diri'], cards:[
+    'Kebiasaan apa yang kamu punya tapi malu buat ngaku?','Apa satu ketidaksukaan kamu yang sebenarnya berakar dari pengalaman masa lalu?','Kebiasaan apa yang kamu tau nggak sehat tapi susah kamu tinggalin?','Apa hal yang kamu suka justru karena itu bikin kamu ngerasa aman?','Kebiasaan siapa di lingkaran pertemanan yang diam-diam kamu tiru?','Apa satu preferensi kamu yang berubah drastis seiring waktu?','Kebiasaan apa yang muncul kalau kamu lagi nggak baik-baik aja?','Apa hal yang kamu benci tapi tetap kamu lakuin demi orang lain?','Kebiasaan apa dari keluarga yang tanpa sadar udah nempel di kamu?','Apa satu kesukaan kamu yang jarang kamu bagi karena takut dihakimi?','Kebiasaan apa yang bikin kamu ngerasa paling jadi diri sendiri?','Apa hal yang kamu suka dari kesendirian?','Kebiasaan apa yang kamu ubah demi seseorang yang penting buat kamu?','Apa satu hal yang kamu benci tentang dirimu sendiri?','Kebiasaan apa yang bikin kamu ngerasa paling produktif dan tenang?','Apa preferensi kamu soal cara orang menunjukkan sayang ke kamu?','Kebiasaan apa yang kamu harap orang lain lebih mengerti dari kamu?','Apa satu hal yang kamu suka sekarang tapi dulu kamu benci?','Kebiasaan apa yang paling menggambarkan siapa kamu sebenarnya?','Apa satu ketidaksukaan kamu yang paling sering disalahpahami orang lain?'
   ]},
-  { id:'kenangan', label:'Kenangan & Nostalgia', shared:true, decks:[
-    { name:'Dulu Banget', color:'amber', cards:[
-      'Jajanan SD apa yang paling kamu kangenin?','Kartun atau acara TV apa yang dulu wajib kamu tonton tiap minggu?','HP pertamamu apa, dan apa yang paling kamu inget dari HP itu?','Lagu apa yang langsung bikin kamu keinget masa SMA?','Mainan apa yang dulu paling kamu pengen tapi nggak kesampaian?','Siapa temen masa kecil yang paling kamu inget, dan lagi di mana dia sekarang?','Momen paling malu-maluin waktu sekolah yang masih kamu inget?','Liburan sekolah dulu biasanya kamu habisin ke mana?','Guru mana yang paling membekas buat kamu, dan kenapa?','Tren apa yang dulu kamu ikutin dan sekarang bikin kamu geleng-geleng?','Apa hal yang dulu kamu takutin banget waktu kecil?','Rumah atau tempat mana yang paling bikin kamu nostalgia?','Permainan anak-anak apa yang paling sering kamu mainin bareng temen?','Kalau bisa balik ke satu hari di masa lalu, kamu pilih hari apa?','Kebiasaan waktu kecil apa yang ternyata masih kamu bawa sampai sekarang?','Cita-cita pertamamu waktu kecil apa?','Barang lama apa yang masih kamu simpan sampai sekarang?','Bau atau rasa apa yang langsung bikin kamu keinget masa kecil?','Momen ulang tahun paling berkesan yang pernah kamu alami?','Apa satu hal dari zaman dulu yang kamu harap masih ada sekarang?'
-    ]}
+  { name:'Cerita Iman', color:'blue', depth:'ringan', desc:'Ayat, lagu, dan momen dekat sama Tuhan.', for:['pasangan','hangout','keluarga','komunitas','diri'], cards:[
+    'Kapan pertama kali kamu ngerasa dekat sama Tuhan?','Ayat Alkitab apa yang paling nempel di hati kamu?','Lagu rohani apa yang paling sering kamu putar?','Momen apa yang bikin imanmu makin kuat?','Kebiasaan apa yang kamu lakuin buat jaga waktu sama Tuhan?','Gereja mana yang paling berkesan buat kamu, dan kenapa?','Siapa yang paling banyak membentuk imanmu — orang tua, guru sekolah minggu, atau siapa?','Apa doa yang paling sering kamu ucapkan belakangan ini?','Kalau lagi baca Alkitab, kamu suka mulai dari kitab apa?','Apa momen kecil yang kamu anggap jawaban doa?','Kegiatan pelayanan apa yang paling kamu senangi?','Apa firman Tuhan yang lagi relate banget sama hidupmu sekarang?','Kebiasaan rohani apa yang pengen banget kamu bangun?','Apa lagu pujian yang selalu bikin kamu merinding?','Momen ibadah apa yang paling kamu kangenin?','Apa hal kecil yang bikin kamu bersyukur hari ini?','Siapa tokoh Alkitab yang paling kamu suka, dan kenapa?','Apa yang biasanya kamu lakuin buat renungan pribadi?','Kapan terakhir kali kamu ngerasa didengar sama Tuhan?','Apa harapanmu buat perjalanan imanmu tahun ini?'
   ]},
-  { id:'mimpi', label:'Mimpi & Cita-cita', shared:true, decks:[
-    { name:'Kalau Bisa...', color:'blue', cards:[
-      'Kalau uang bukan masalah, kamu bakal ngapain tiap hari?','Satu hal di bucket list-mu yang paling pengen kamu coret tahun ini?','Negara mana yang pengen banget kamu kunjungi, dan ngapain di sana?','Kalau bisa jago satu hal dalam semalam, kamu pilih apa?','Bisnis apa yang pernah kepikiran mau kamu bikin?','Kamu pengen dikenal orang sebagai apa 10 tahun lagi?','Mimpi masa kecil apa yang masih diam-diam kamu simpan?','Kalau bisa kerja apa aja tanpa takut gagal, kamu pilih kerja apa?','Rumah impianmu kayak gimana — di kota, di gunung, atau di pinggir pantai?','Siapa orang yang hidupnya pengen kamu contoh, dan bagian mana?','Skill apa yang pengen kamu pelajari sebelum umur 40?','Kalau punya satu tahun libur, kamu isi dengan apa?','Apa satu hal besar yang pengen kamu bangun atau ciptakan?','Mimpi apa yang pernah kamu lepas, dan kenapa?','Apa yang bikin kamu belum mulai ngejar mimpi terbesarmu?','Kalau bisa bantu selesaikan satu masalah di dunia, kamu pilih masalah apa?','Pencapaian apa yang bakal bikin kamu bilang "oke, hidupku udah cukup"?','Pengalaman apa yang pengen kamu rasain minimal sekali seumur hidup?','Kalau lima tahun lagi semua berjalan lancar, hidupmu kayak apa?','Langkah kecil apa yang bisa kamu ambil minggu ini buat mimpimu?'
-    ]}
+  { name:'Renungan Bersama', color:'gold', depth:'dalam', desc:'Keraguan, pergumulan, dan kasih karunia.', for:['pasangan','hangout','keluarga','komunitas','diri'], cards:[
+    'Apa keraguan terbesar soal iman yang pernah kamu alami?','Bagaimana caramu menghadapi masa-masa jauh dari Tuhan?','Apa pergumulan rohani yang lagi kamu hadapi sekarang?','Apa yang bikin kamu sulit percaya sama rencana Tuhan di masa sulit?','Bagaimana pandanganmu soal pengampunan dalam iman Kristen?','Apa satu hal dalam Alkitab yang masih sulit kamu pahami?','Bagaimana caramu menyeimbangkan iman dan tantangan hidup sehari-hari?','Apa yang kamu pelajari dari masa-masa gelap dalam perjalanan imanmu?','Bagaimana caramu mendengar suara Tuhan dalam keputusan besar?','Apa artinya kasih karunia buat kamu secara pribadi?','Bagaimana caramu memaknai penderitaan dalam terang iman?','Apa yang kamu harap bisa berubah dalam hubunganmu dengan Tuhan?','Bagaimana caramu menjaga iman tetap hidup di tengah kesibukan?','Apa satu keputusan hidup yang kamu ambil berdasarkan iman?','Bagaimana caramu memandang komunitas gereja dalam pertumbuhan rohanimu?','Apa yang bikin kamu takut untuk lebih terbuka soal iman ke orang lain?','Bagaimana caramu memahami kehendak Tuhan yang kadang berbeda dari rencanamu?','Apa satu hal yang ingin kamu wariskan soal iman ke generasi berikutnya?','Bagaimana perjalanan imanmu memengaruhi caramu mencintai orang lain?','Apa harapan terbesarmu soal hubunganmu dengan Tuhan ke depan?'
   ]},
-  { id:'makanan', label:'Makanan & Kuliner', shared:true, decks:[
-    { name:'Urusan Perut', color:'brick', cards:[
-      'Bubur diaduk atau nggak diaduk? Pertahankan pendapatmu.','Warung atau tempat makan langganan yang paling kamu rekomendasiin?','Makanan apa yang selalu kamu cari kalau lagi sedih?','Martabak manis atau martabak telor?','Masakan rumah siapa yang paling kamu kangenin?','Makanan apa yang menurutmu enak banget tapi orang lain bilang aneh?','Level pedas kamu sebenernya di angka berapa?','Makanan daerah mana yang paling pengen kamu cobain langsung di tempat asalnya?','Kalau cuma boleh makan di satu restoran seumur hidup, kamu pilih yang mana?','Menu apa yang pasti kamu pesan kalau ke warteg?','Minuman apa yang paling sering kamu beli seminggu ini?','Masakan apa yang bisa kamu bikin dan bangga banget sama hasilnya?','Kamu tim nasi harus ada, atau bisa makan tanpa nasi?','Jajanan malam favoritmu apa?','Makanan apa yang dulu kamu benci tapi sekarang malah suka?','Kalau jadi juri lomba masak, makanan apa yang langsung kamu kasih nilai sempurna?','Kenangan apa yang paling kuat nempel sama satu makanan tertentu?','Sarapan ideal versi kamu itu kayak gimana?','Kamu tipe yang coba menu baru atau pesen yang itu-itu aja?','Kalau masak makan malam buat orang-orang di sini, kamu masak apa?'
-    ]}
+  { name:'Dulu Banget', color:'amber', depth:'ringan', desc:'Jajanan SD, kartun lama, dan masa sekolah.', cards:[
+    'Jajanan SD apa yang paling kamu kangenin?','Kartun atau acara TV apa yang dulu wajib kamu tonton tiap minggu?','HP pertamamu apa, dan apa yang paling kamu inget dari HP itu?','Lagu apa yang langsung bikin kamu keinget masa SMA?','Mainan apa yang dulu paling kamu pengen tapi nggak kesampaian?','Siapa temen masa kecil yang paling kamu inget, dan lagi di mana dia sekarang?','Momen paling malu-maluin waktu sekolah yang masih kamu inget?','Liburan sekolah dulu biasanya kamu habisin ke mana?','Guru mana yang paling membekas buat kamu, dan kenapa?','Tren apa yang dulu kamu ikutin dan sekarang bikin kamu geleng-geleng?','Apa hal yang dulu kamu takutin banget waktu kecil?','Rumah atau tempat mana yang paling bikin kamu nostalgia?','Permainan anak-anak apa yang paling sering kamu mainin bareng temen?','Kalau bisa balik ke satu hari di masa lalu, kamu pilih hari apa?','Kebiasaan waktu kecil apa yang ternyata masih kamu bawa sampai sekarang?','Cita-cita pertamamu waktu kecil apa?','Barang lama apa yang masih kamu simpan sampai sekarang?','Bau atau rasa apa yang langsung bikin kamu keinget masa kecil?','Momen ulang tahun paling berkesan yang pernah kamu alami?','Apa satu hal dari zaman dulu yang kamu harap masih ada sekarang?'
   ]},
-  { id:'nilai', label:'Nilai & Prinsip', shared:true, decks:[
-    { name:'Yang Nggak Bisa Ditawar', color:'plum', deep:true, cards:[
-      'Prinsip apa yang kamu pegang walau bikin kamu rugi?','Kapan terakhir kali kamu berubah pikiran soal sesuatu yang besar?','Nilai apa yang paling kamu harap orang lihat dari kamu?','Apa arti jujur buat kamu — ada batasnya nggak?','Hal apa yang bikin kamu langsung kehilangan respek sama seseorang?','Keputusan sulit apa yang pernah kamu ambil karena prinsip?','Nilai apa yang kamu dapet dari keluarga, dan mana yang kamu tolak?','Menurutmu, sukses itu diukur dari apa?','Kapan kamu ngerasa prinsipmu diuji paling berat?','Mana yang lebih penting buatmu: benar atau damai?','Kompromi apa yang menurutmu sehat, dan mana yang nggak?','Apa satu pendapatmu yang mungkin nggak populer?','Gimana caramu memutuskan kalau dua nilai yang kamu pegang bertabrakan?','Siapa orang paling konsisten sama prinsipnya yang kamu kenal?','Apa hal yang dulu kamu anggap penting, sekarang nggak lagi?','Apa arti setia buatmu, di luar hubungan romantis?','Gimana kamu pengen memperlakukan orang yang nggak bisa balas apa-apa ke kamu?','Apa yang kamu lakukan kalau lihat sesuatu yang salah tapi semua orang diam?','Nilai apa yang pengen kamu tanamkan ke generasi setelahmu?','Kalau hidupmu diringkas jadi satu prinsip, apa itu?'
-    ]}
+  { name:'Kalau Bisa...', color:'blue', depth:'ringan', desc:'Mimpi, bucket list, dan cita-cita.', cards:[
+    'Kalau uang bukan masalah, kamu bakal ngapain tiap hari?','Satu hal di bucket list-mu yang paling pengen kamu coret tahun ini?','Negara mana yang pengen banget kamu kunjungi, dan ngapain di sana?','Kalau bisa jago satu hal dalam semalam, kamu pilih apa?','Bisnis apa yang pernah kepikiran mau kamu bikin?','Kamu pengen dikenal orang sebagai apa 10 tahun lagi?','Mimpi masa kecil apa yang masih diam-diam kamu simpan?','Kalau bisa kerja apa aja tanpa takut gagal, kamu pilih kerja apa?','Rumah impianmu kayak gimana — di kota, di gunung, atau di pinggir pantai?','Siapa orang yang hidupnya pengen kamu contoh, dan bagian mana?','Skill apa yang pengen kamu pelajari sebelum umur 40?','Kalau punya satu tahun libur, kamu isi dengan apa?','Apa satu hal besar yang pengen kamu bangun atau ciptakan?','Mimpi apa yang pernah kamu lepas, dan kenapa?','Apa yang bikin kamu belum mulai ngejar mimpi terbesarmu?','Kalau bisa bantu selesaikan satu masalah di dunia, kamu pilih masalah apa?','Pencapaian apa yang bakal bikin kamu bilang "oke, hidupku udah cukup"?','Pengalaman apa yang pengen kamu rasain minimal sekali seumur hidup?','Kalau lima tahun lagi semua berjalan lancar, hidupmu kayak apa?','Langkah kecil apa yang bisa kamu ambil minggu ini buat mimpimu?'
   ]},
-  { id:'syukur', label:'Syukur & Refleksi', shared:true, decks:[
-    { name:'Naik Turun', color:'sage', deep:true, cards:[
-      'Apa hal paling baik yang terjadi bulan ini?','Apa hal paling berat bulan ini, dan gimana kamu melewatinya?','Siapa orang yang pengen kamu ucapin terima kasih sekarang, dan kenapa?','Hal kecil apa yang sering kamu anggap biasa padahal patut disyukuri?','Apa pelajaran terbesar yang kamu dapet tahun ini?','Kapan terakhir kali kamu ngerasa benar-benar tenang?','Apa hal yang kamu syukuri dari masa sulit yang pernah kamu lewati?','Bagian mana dari dirimu yang tumbuh paling banyak setahun terakhir?','Apa yang pengen kamu lepasin sebelum tahun ini selesai?','Momen apa minggu ini yang bikin kamu senyum?','Apa yang lagi kamu tunggu-tunggu dalam waktu dekat?','Kebiasaan apa yang bikin hidupmu lebih baik belakangan ini?','Apa yang bakal kamu bilang ke dirimu setahun lalu?','Hal apa yang kamu punya sekarang yang dulu cuma kamu doakan atau impikan?','Siapa yang diam-diam banyak bantu kamu tanpa kamu sadari?','Apa yang bikin kamu capek akhir-akhir ini, dan apa yang bisa dikurangi?','Kapan kamu ngerasa bangga sama dirimu sendiri baru-baru ini?','Apa satu hal yang pengen kamu lakukan lebih sering?','Hal apa yang bikin kamu ngerasa cukup?','Kalau bulan depan harus lebih baik, satu hal apa yang kamu ubah?'
-    ]}
+  { name:'Urusan Perut', color:'brick', depth:'ringan', desc:'Debat makanan dan tempat makan favorit.', for:['pasangan','hangout','keluarga','kolega','pdkt','komunitas'], cards:[
+    'Bubur diaduk atau nggak diaduk? Pertahankan pendapatmu.','Warung atau tempat makan langganan yang paling kamu rekomendasiin?','Makanan apa yang selalu kamu cari kalau lagi sedih?','Martabak manis atau martabak telor?','Masakan rumah siapa yang paling kamu kangenin?','Makanan apa yang menurutmu enak banget tapi orang lain bilang aneh?','Level pedas kamu sebenernya di angka berapa?','Makanan daerah mana yang paling pengen kamu cobain langsung di tempat asalnya?','Kalau cuma boleh makan di satu restoran seumur hidup, kamu pilih yang mana?','Menu apa yang pasti kamu pesan kalau ke warteg?','Minuman apa yang paling sering kamu beli seminggu ini?','Masakan apa yang bisa kamu bikin dan bangga banget sama hasilnya?','Kamu tim nasi harus ada, atau bisa makan tanpa nasi?','Jajanan malam favoritmu apa?','Makanan apa yang dulu kamu benci tapi sekarang malah suka?','Kalau jadi juri lomba masak, makanan apa yang langsung kamu kasih nilai sempurna?','Kenangan apa yang paling kuat nempel sama satu makanan tertentu?','Sarapan ideal versi kamu itu kayak gimana?','Kamu tipe yang coba menu baru atau pesen yang itu-itu aja?','Kalau masak makan malam buat orang-orang di sini, kamu masak apa?'
+  ]},
+  { name:'Yang Nggak Bisa Ditawar', color:'plum', depth:'dalam', desc:'Prinsip, nilai, dan pendapat yang nggak populer.', cards:[
+    'Prinsip apa yang kamu pegang walau bikin kamu rugi?','Kapan terakhir kali kamu berubah pikiran soal sesuatu yang besar?','Nilai apa yang paling kamu harap orang lihat dari kamu?','Apa arti jujur buat kamu — ada batasnya nggak?','Hal apa yang bikin kamu langsung kehilangan respek sama seseorang?','Keputusan sulit apa yang pernah kamu ambil karena prinsip?','Nilai apa yang kamu dapet dari keluarga, dan mana yang kamu tolak?','Menurutmu, sukses itu diukur dari apa?','Kapan kamu ngerasa prinsipmu diuji paling berat?','Mana yang lebih penting buatmu: benar atau damai?','Kompromi apa yang menurutmu sehat, dan mana yang nggak?','Apa satu pendapatmu yang mungkin nggak populer?','Gimana caramu memutuskan kalau dua nilai yang kamu pegang bertabrakan?','Siapa orang paling konsisten sama prinsipnya yang kamu kenal?','Apa hal yang dulu kamu anggap penting, sekarang nggak lagi?','Apa arti setia buatmu, di luar hubungan romantis?','Gimana kamu pengen memperlakukan orang yang nggak bisa balas apa-apa ke kamu?','Apa yang kamu lakukan kalau lihat sesuatu yang salah tapi semua orang diam?','Nilai apa yang pengen kamu tanamkan ke generasi setelahmu?','Kalau hidupmu diringkas jadi satu prinsip, apa itu?'
+  ]},
+  { name:'Naik Turun', color:'sage', depth:'dalam', desc:'Syukur dan refleksi bulan ini.', cards:[
+    'Apa hal paling baik yang terjadi bulan ini?','Apa hal paling berat bulan ini, dan gimana kamu melewatinya?','Siapa orang yang pengen kamu ucapin terima kasih sekarang, dan kenapa?','Hal kecil apa yang sering kamu anggap biasa padahal patut disyukuri?','Apa pelajaran terbesar yang kamu dapet tahun ini?','Kapan terakhir kali kamu ngerasa benar-benar tenang?','Apa hal yang kamu syukuri dari masa sulit yang pernah kamu lewati?','Bagian mana dari dirimu yang tumbuh paling banyak setahun terakhir?','Apa yang pengen kamu lepasin sebelum tahun ini selesai?','Momen apa minggu ini yang bikin kamu senyum?','Apa yang lagi kamu tunggu-tunggu dalam waktu dekat?','Kebiasaan apa yang bikin hidupmu lebih baik belakangan ini?','Apa yang bakal kamu bilang ke dirimu setahun lalu?','Hal apa yang kamu punya sekarang yang dulu cuma kamu doakan atau impikan?','Siapa yang diam-diam banyak bantu kamu tanpa kamu sadari?','Apa yang bikin kamu capek akhir-akhir ini, dan apa yang bisa dikurangi?','Kapan kamu ngerasa bangga sama dirimu sendiri baru-baru ini?','Apa satu hal yang pengen kamu lakukan lebih sering?','Hal apa yang bikin kamu ngerasa cukup?','Kalau bulan depan harus lebih baik, satu hal apa yang kamu ubah?'
   ]}
 ];
 
 /* Kategori (sama siapa). Urutan di sini = urutan di halaman depan. */
 const AUDIENCES = [
-  { id:'pasangan', name:'Pasangan', color:'clay',
+  { id:'pasangan', name:'Pasangan', color:'clay', pair:true,
     desc:'Buat kamu dan pasangan — dari kenalan lagi sampai ngobrolin masa depan.',
+    theme:{ paper:'#FBEFEC', paperDark:'#2A1D1F', back:'#6B2D3A', font:'serif-italic', pattern:'glow', radius:24, mark:'kita berdua' },
     decks:[
-      { name:'Awal Cerita', color:'sage', topic:'light', cards:[
+      { name:'Awal Cerita', color:'sage', depth:'ringan', desc:'Nostalgia dari awal kenal sampai jadian.', cards:[
         'Apa kesan pertamamu tentang aku?','Momen apa yang bikin kamu yakin mau lanjut lebih jauh sama aku?','Kebiasaan kecilku yang paling kamu suka apa?','Kalau harus ceritakan aku ke orang asing dalam satu kalimat, kamu bilang apa?','Apa hal pertama yang kamu perhatikan dari aku waktu itu?','Percakapan kita yang paling kamu ingat itu yang mana?','Ada yang bikin kamu ragu di awal nggak? Apa itu?','Menurutmu apa yang bikin hubungan kita beda dari yang lain?','Kapan kamu pertama kali mikir "ini bisa serius"?','Apa hal receh yang bikin kita jadi dekat?','Siapa yang lebih dulu naksir, menurutmu?','Apa yang bikin kamu penasaran sama aku waktu itu?','Momen canggung pertama kita yang kamu inget itu apa?','Apa yang kamu pikirkan pas kita jadian?','Kalau boleh ulang momen PDKT, apa yang mau kamu ubah?','Apa hal tentang aku yang ternyata beda dari kesan pertamamu?','Siapa yang lebih dulu bilang "aku sayang kamu"?','Apa yang bikin kamu yakin lanjut walau ada keraguan?','Tempat pertama kita jalan berdua, apa yang kamu inget dari situ?','Apa satu hal receh yang selalu kamu inget dari awal kita deket?'
       ]},
-      { name:'Seru-Seruan', color:'amber', topic:'light', cards:[
+      { name:'Seru-Seruan', color:'amber', depth:'ringan', desc:'Pertanyaan konyol buat ketawa bareng.', cards:[
         'Kalau kita jadi karakter di film, ini genre apa dan siapa yang lebih banyak dialognya?','Julukan paling absurd yang pernah kamu pikirkan buatku apa?','Kalau kita punya lagu tema, kira-kira lagu apa?','Superpower apa yang paling cocok buat pasangan kayak kita?','Kalau harus liburan dadakan besok, kamu bawa aku ke mana?','Peran apa yang biasanya kamu ambil kalau kita lagi masak bareng?','Kalau aku jadi hewan, menurutmu aku jadi hewan apa?','Kebiasaan lucu apa dariku yang bikin kamu gemas tapi nggak pernah bilang?','Kalau kita ikut kuis pasangan di TV, siapa yang bakal lebih PD jawab?','Makanan apa yang wajib ada tiap kita kumpul?','Kalau kita punya acara TV sendiri, judulnya apa?','Emoji apa yang paling ngegambarin hubungan kita?','Kalau ketemu versi kita 10 tahun lalu, apa yang mau kamu bilang?','Siapa yang lebih parah kalau lagi ngambek, menurutmu?','Kalau kita jadi duo superhero, siapa yang jadi otaknya?','Kebiasaan tidurku yang paling lucu menurutmu apa?','Kalau kita ikut lomba masak, siapa yang bakal panik duluan?','Nama panggilan paling absurd yang pernah kepikiran buat aku apa?','Kalau kita jadi meme, kira-kira meme apa?','Satu hal random yang selalu bikin kamu ketawa kalau inget aku apa?'
       ]},
-      { name:'Semakin Dekat', color:'clay', topic:'deep', cards:[
+      { name:'Semakin Dekat', color:'clay', depth:'dalam', desc:'Kebutuhan, ketakutan, dan hal yang belum sempat diomongin.', cards:[
         'Apa ketakutan terbesarmu soal hubungan kita ke depan?','Hal apa yang belum pernah kamu ceritakan tapi pengen kamu bagi sekarang?','Kapan terakhir kali kamu ngerasa paling didukung sama aku?','Apa yang kamu butuhkan dariku saat lagi capek atau sedih?','Menurutmu, apa yang paling sering bikin kita salah paham?','Adakah kebiasaanku yang sebenarnya mengganggu tapi belum kamu omongin?','Gimana caramu pengen diminta maaf kalau aku salah?','Apa satu hal tentang keluargamu yang penting aku ngerti?','Kapan kamu ngerasa paling jauh dariku, dan kenapa?','Apa yang bikin kamu percaya penuh sama aku?','Apa luka lama yang masih memengaruhi caramu mencintai?','Gimana caramu pengen dihibur kalau lagi down?','Apa yang bikin kamu ngerasa nggak didengar sama aku?','Batasan apa yang penting buatmu dalam hubungan kita?','Apa yang kamu harap aku lebih ngerti soal dirimu?','Kapan kamu paling ngerasa bangga jadi pasanganku?','Apa hal yang bikin kamu cemburu, walau kecil?','Gimana caramu tahu kalau kamu udah dimaafkan?','Apa yang kamu takutkan soal masa depan kita?','Apa satu rahasia kecil yang belum pernah kamu ceritain ke aku?'
       ]},
-      { name:'Rencana Bersama', color:'blue', topic:'deep', cards:[
+      { name:'Rencana Bersama', color:'blue', depth:'dalam', desc:'Rumah, keuangan, keluarga, dan hidup ke depan.', cards:[
         'Rumah kayak apa yang kamu bayangin buat kita nanti?','Kebiasaan keluarga mana yang pengen kamu bawa ke rumah tangga kita?','Gimana caramu bagi tanggung jawab rumah yang menurutmu adil?','Kalau ada masalah besar, kamu maunya kita selesaikan dengan cara apa?','Apa satu tradisi kecil yang pengen kita punya berdua?','Menurutmu, gimana caranya kita tetap jadi tim walau sibuk kerja?','Apa harapanmu soal caraku dukung pekerjaan dan mimpimu?','Kalau salah satu dari kita harus ambil keputusan besar, gimana caranya kita mutusin bareng?','Apa yang menurutmu penting dipersiapkan sebelum kita menikah?','Gambaran hidup kita 10 tahun lagi, menurutmu kayak apa?','Gimana caramu pengen kita atur keuangan berdua nanti?','Apa peran masing-masing keluarga besar dalam hidup kita nanti?','Kalau punya anak nanti, nilai apa yang paling penting diajarin?','Apa kebiasaan dari orang tuamu yang pengen kamu terapkan juga?','Gimana caranya kita tetap punya waktu berdua di tengah kesibukan?','Apa satu hal yang pengen kamu capai bareng aku sebelum tua?','Kalau salah satu harus pindah kota buat kerjaan, gimana kita mutusin?','Apa artinya "sukses berdua" buat kamu?','Gimana caramu pengen kita rayain hari-hari penting nanti?','Apa yang pengen kamu wariskan ke anak-anak kita nanti, kalau ada?'
       ]},
-      { name:'Obrolan Pranikah', color:'gold', topic:'nikah', deep:true, cards:[
+      { name:'Obrolan Pranikah', color:'gold', depth:'dalam', desc:'Hal praktis yang perlu disepakati sebelum menikah.', cards:[
         'Uang masing-masing, uang bersama, atau campuran — gimana idealnya buat kita?','Berapa batas pengeluaran yang boleh diputusin sendiri tanpa ngobrol dulu?','Gimana sikap kita soal utang, cicilan, dan beli barang besar?','Seberapa sering kita mau ketemu keluarga besar masing-masing?','Kalau orang tua ikut campur keputusan kita, gimana cara kita menanggapinya bareng?','Pas kita berantem, kamu butuh jeda dulu atau maunya langsung diselesaikan?','Kata-kata atau sikap apa yang nggak boleh keluar walau lagi marah?','Kebiasaan sehari-hariku apa yang mungkin bakal susah kamu terima kalau udah serumah?','Gimana kita bagi pekerjaan rumah kalau dua-duanya lagi capek kerja?','Gimana kita mau jalanin ibadah dan pertumbuhan iman sebagai pasangan?','Kita mau gabung gereja atau komunitas yang sama, atau tetap masing-masing?','Harapan soal pernikahan apa yang kamu bawa dari keluargamu, sadar atau nggak?','Pernikahan siapa di sekitar kita yang pengen kita contoh, dan kenapa?','Apa yang paling kamu takutin berubah setelah kita menikah?','Waktu sendiri buat kamu sepenting apa, dan gimana kita jaga itu?','Gimana kita jaga pertemanan masing-masing setelah menikah?','Kalau salah satu dari kita lagi down lama, dukungan kayak apa yang kamu harapkan?','Soal hari pernikahan, apa yang paling penting buatmu dan apa yang bisa dilepas?','Perlu nggak kita punya waktu rutin buat ngobrolin hubungan kita? Seberapa sering?','Janji apa yang pengen kamu pegang terus, bahkan di tahun-tahun paling sibuk?'
       ]}
     ]
   },
   { id:'hangout', name:'Teman & Hangout', color:'blue',
     desc:'Buat nongkrong bareng temen — seru-seruan sampai ngobrol yang lebih dalam.',
+    theme:{ paper:'#EEF3FA', paperDark:'#192130', back:'#243A63', font:'grotesk', pattern:'dots', radius:14, mark:'gas!' },
     decks:[
-      { name:'Kenalan Seru', color:'sage', topic:'light', cards:[
+      { name:'Kenalan Seru', color:'sage', depth:'ringan', desc:'Hobi, tempat favorit, dan hal yang lagi disuka.', cards:[
         'Hobi apa yang pengen banget kamu tekuni tapi belum sempat?','Kalau libur mendadak, kamu bakal ngapain?','Tempat nongkrong favoritmu di mana?','Film atau series apa yang bisa kamu tonton berkali-kali?','Kalau harus milih satu makanan buat seumur hidup, apa itu?','Apa hal yang bikin kamu excited belakangan ini?','Kalau bisa punya skill baru instan, kamu pilih apa?','Musim atau cuaca favoritmu apa dan kenapa?','Kalau dikasih waktu luang 1 jam, biasanya ngapain?','Aplikasi apa yang paling sering kamu buka?','Kalau bisa jalan-jalan ke satu kota sekarang, ke mana?','Apa hal kecil yang bikin harimu jadi lebih baik?','Kalau harus pilih, kopi atau teh? Kenapa?','Barang apa yang selalu kamu bawa ke mana-mana?','Kalau bisa ketemu satu tokoh publik, siapa itu?','Apa lagu yang lagi sering kamu putar ulang?','Kalau weekend ideal, kamu bakal ngapain aja?','Apa hal random yang kamu jago tapi jarang dipamerin?','Kalau harus pindah kota, kamu pilih ke mana?','Apa satu hal yang pengen banget kamu coba tahun ini?'
       ]},
-      { name:'Receh Abis', color:'amber', topic:'light', cards:[
+      { name:'Receh Abis', color:'amber', depth:'ringan', desc:'Pertanyaan absurd buat cairin suasana.', cards:[
         'Kalau kamu jadi karakter kartun, kamu jadi siapa?','Julukan paling absurd yang pernah orang kasih ke kamu apa?','Kalau harus nyanyi di depan umum, lagu apa yang kamu pilih?','Kebiasaan aneh apa yang cuma kamu sadari sendiri?','Kalau jadi meme, kira-kira meme apa kamu?','Apa hal paling receh yang pernah bikin kamu ketawa ngakak?','Kalau bisa punya hewan peliharaan aneh, kamu pilih apa?','Gaya jalan kamu paling mirip karakter siapa?','Kalau dikasih kekuatan super tapi konyol, kamu pilih apa?','Apa kebiasaan makan paling aneh yang kamu punya?','Kalau harus jadi mata pelajaran di sekolah, kamu jadi apa?','Suara paling lucu yang pernah kamu bikin apa?','Kalau jadi warna, kamu warna apa dan kenapa?','Gerakan dance andalan kamu apa?','Kalau harus punya nama panggung, apa nama panggungmu?','Apa hal paling nekat yang pernah kamu lakuin buat lucu-lucuan?','Kalau jadi emoji, kamu emoji apa?','Kebiasaan konyol apa yang suka kamu lakuin pas sendirian?','Kalau ikut lomba paling aneh sedunia, kamu ikut lomba apa?','Apa hal random yang selalu bikin temen-temen ketawa kalau kamu lakuin?'
       ]},
-      { name:'Rame-Rame', color:'clay', topic:'light', cards:[
+      { name:'Rame-Rame', color:'clay', depth:'ringan', desc:'Tebak-tebakan "siapa yang paling mungkin…" di grup.', tag:'Game · 3+ orang', cards:[
         'Siapa yang paling mungkin telat kalau janjian jam 7 pagi?','Siapa yang paling mungkin jadi CEO dadakan kalau kita buka bisnis bareng?','Siapa yang paling mungkin nangis nonton film sedih di depan orang banyak?','Siapa yang paling mungkin lupa bawa dompet pas udah sampai tempat makan?','Siapa yang paling mungkin menang kalau kita lomba maraton ngobrol semalaman?','Siapa yang paling mungkin jadi yang pertama tidur kalau kita nginep bareng?','Siapa yang paling mungkin nyasar walau udah pake GPS?','Siapa yang paling mungkin jadi tukang drama kalau lagi grup chat rame?','Siapa yang paling mungkin ngilang duluan kalau lagi jalan-jalan?','Siapa yang paling mungkin jadi juru damai kalau ada yang berantem di grup?','Siapa yang paling mungkin heboh sendiri nonton pertandingan bola?','Siapa yang paling mungkin lupa ulang tahun temen sendiri?','Siapa yang paling mungkin jadi yang paling PD kalau karaoke?','Siapa yang paling mungkin ngajak healing ke luar kota dadakan?','Siapa yang paling mungkin jadi yang paling irit kalau lagi liburan bareng?','Siapa yang paling mungkin ketiduran duluan kalau nonton midnight movie?','Siapa yang paling mungkin jadi provokator kalau lagi main game bareng?','Siapa yang paling mungkin jadi yang paling rajin bales chat duluan?','Siapa yang paling mungkin sukses jadi youtuber atau content creator?','Siapa yang paling mungkin jadi yang paling susah move on kalau putus?'
       ]},
-      { name:'Deep Talk Temenan', color:'blue', topic:'deep', cards:[
+      { name:'Deep Talk Temenan', color:'blue', depth:'dalam', desc:'Overthinking, ketakutan, dan arti pertemanan.', cards:[
         'Apa hal yang lagi bikin kamu overthinking belakangan ini?','Menurutmu, apa arti pertemanan yang sebenarnya?','Apa pencapaian kecil yang kamu banggain tapi jarang diomongin?','Kalau boleh kasih saran ke diri sendiri 5 tahun lalu, apa itu?','Apa ketakutan yang jarang kamu ceritain ke orang lain?','Menurutmu, apa yang bikin kamu berubah paling banyak tahun ini?','Apa hal yang pengen banget kamu selesaikan tapi belum berani mulai?','Kalau bisa minta maaf ke satu orang, siapa dan kenapa?','Apa definisi bahagia versi kamu sekarang?','Hal apa yang bikin kamu ngerasa paling dihargai?','Apa satu keputusan besar yang paling kamu syukuri?','Menurutmu, apa yang orang sering salah paham tentang kamu?','Apa hal yang bikin kamu susah percaya sama orang baru?','Kalau bisa ubah satu hal dari masa kecilmu, apa itu?','Apa yang kamu takutkan soal masa depan?','Menurutmu, siapa orang yang paling banyak bentuk cara berpikirmu?','Apa hal yang bikin kamu bangga jadi diri sendiri?','Kapan terakhir kali kamu ngerasa bener-bener didengar?','Apa satu hal yang pengen kamu maafkan dari diri sendiri?','Apa harapan terbesarmu buat pertemanan kita ke depan?'
       ]}
     ]
   },
   { id:'keluarga', name:'Keluarga', color:'sage',
     desc:'Buat momen kumpul keluarga — cerita ringan sampai obrolan yang lebih dalam.',
+    theme:{ paper:'#F5F2E6', paperDark:'#1F211A', back:'#44573F', font:'serif', pattern:'gingham', radius:20, mark:'di rumah' },
     decks:[
-      { name:'Cerita Rumah', color:'sage', topic:'light', cards:[
+      { name:'Cerita Rumah', color:'sage', depth:'ringan', desc:'Kebiasaan, masakan, dan tradisi keluarga.', cards:[
         'Kebiasaan keluarga apa yang paling kamu inget dari kecil?','Masakan rumah favoritmu apa?','Siapa di keluarga yang paling jago masak?','Liburan keluarga paling berkesan itu ke mana?','Kebiasaan lucu apa yang cuma ada di keluargamu?','Mainan masa kecil yang paling kamu inget apa?','Siapa yang paling cerewet di rumah?','Acara TV apa yang biasa ditonton bareng keluarga?','Tradisi lebaran atau tahun baru di keluargamu kayak gimana?','Panggilan sayang apa yang dipakai di rumah?','Siapa yang paling mirip sama kamu di keluarga?','Kebiasaan pagi hari di rumahmu kayak gimana?','Apa hewan peliharaan yang pernah dipelihara keluarga?','Siapa anggota keluarga yang paling suka cerita lucu?','Tempat kumpul favorit keluargamu di rumah di mana?','Kebiasaan makan malam di keluargamu gimana?','Apa julukan yang biasa dipakai buat manggil kamu di rumah?','Kegiatan apa yang rutin dilakuin bareng keluarga tiap minggu?','Cerita paling sering diulang-ulang di keluargamu apa?','Siapa yang paling sering ngatur acara keluarga?'
       ]},
-      { name:'Ngobrol Dalam', color:'clay', topic:'deep', cards:[
+      { name:'Ngobrol Dalam', color:'clay', depth:'dalam', desc:'Nilai, luka, dan harapan dalam keluarga.', cards:[
         'Apa nilai dari orang tua yang paling melekat di kamu?','Apa hal yang pengen kamu ubah dari cara kamu dibesarkan?','Kapan kamu ngerasa paling didukung sama keluarga?','Apa yang belum pernah kamu bilang ke orang tua tapi pengen kamu sampein?','Apa harapan orang tuamu yang masih kamu bawa sampai sekarang?','Apa luka keluarga yang masih kamu bawa sampai dewasa?','Bagaimana caramu pengen jadi orang tua nanti, beda atau sama kayak orang tuamu?','Apa hal yang bikin kamu bangga sama keluargamu?','Kapan kamu ngerasa paling jauh dari keluarga?','Apa yang kamu takutkan soal hubungan sama orang tua ke depan?','Apa satu hal yang pengen kamu maafkan dari keluarga?','Gimana caramu jaga hubungan sama keluarga di tengah kesibukan?','Apa peran yang biasa kamu ambil dalam keluarga — penengah, pendengar, atau lainnya?','Apa yang kamu pelajari dari cara orang tuamu menghadapi masalah?','Apa harapanmu buat hubungan keluarga 10 tahun lagi?','Apa hal yang jarang dibicarakan di keluargamu tapi penting?','Bagaimana keluarga memengaruhi caramu memandang cinta?','Apa dukungan yang paling kamu butuhkan dari keluarga sekarang?','Apa satu kenangan keluarga yang paling membentuk dirimu?','Apa yang ingin kamu wariskan dari keluargamu ke generasi berikutnya?'
       ]},
-      { name:'Waktu Muda Dulu', color:'amber', topic:'orangtua', cards:[
+      { name:'Waktu Muda Dulu', color:'amber', depth:'ringan', desc:'Cerita masa muda orang tua atau kakek-nenek.', tag:'Tanya ke orang tua', cards:[
         'Waktu seumuran aku sekarang, lagi sibuk ngapain?','Gimana cerita pertama kali ketemu pasangan?','Kerjaan pertama dulu apa, dan gaji pertamanya dipakai buat apa?','Rumah masa kecil dulu kayak gimana?','Makanan apa yang paling sering dimasak di rumah waktu kecil dulu?','Siapa sahabat paling dekat waktu muda, dan masih kontak nggak?','Masa paling susah yang pernah dilewati keluarga ini apa?','Keputusan paling berani yang pernah diambil waktu muda apa?','Dulu cita-citanya apa? Kesampaian nggak?','Hal apa yang paling bikin bangga dari hidup sejauh ini?','Hiburan anak muda zaman dulu itu apa aja?','Nasihat dari orang tua dulu yang paling diinget apa?','Apa yang paling berubah dari kota ini dibanding dulu?','Hari pernikahan dulu kayak gimana ceritanya?','Apa yang paling ditakutin waktu pertama kali jadi orang tua?','Kenakalan paling seru waktu muda apa?','Tradisi keluarga apa yang dulu ada tapi sekarang udah hilang?','Kalau bisa ngulang satu masa dalam hidup, masa yang mana?','Apa yang pengen diwariskan ke anak cucu, selain harta?','Pesan apa buat kami yang masih muda sekarang?'
       ]}
     ]
   },
   { id:'kolega', name:'Kolega & Kerja', color:'plum',
     desc:'Buat cairin suasana kantor — kenalan santai sampai obrolan soal karier.',
+    theme:{ paper:'#F1F2F2', paperDark:'#1B1D20', back:'#2F3B48', font:'sans', pattern:'grid', radius:8, mark:'rehat kopi' },
     decks:[
-      { name:'Kenalan Kantor', color:'amber', topic:'light', cards:[
+      { name:'Kenalan Kantor', color:'amber', depth:'ringan', desc:'Kebiasaan kerja dan hal receh di kantor.', cards:[
         'Kebiasaan kerja apa yang bikin kamu paling produktif?','Ngopi atau ngeteh pas kerja, kamu tim yang mana?','Meja kerja kamu rapi atau berantakan?','Aplikasi kerja apa yang paling sering kamu buka?','Jam berapa kamu paling semangat kerja?','Kalau bisa kerja dari mana aja, kamu pilih di mana?','Snack favorit buat nemenin kerja apa?','Kalau meeting kelamaan, biasanya kamu ngapain diam-diam?','Kebiasaan aneh apa yang kamu punya pas kerja?','Playlist apa yang kamu putar pas lagi fokus kerja?','Kalau bisa skip satu jenis meeting selamanya, meeting apa itu?','Hari kerja favoritmu hari apa dan kenapa?','Apa hal kecil yang bikin harimu di kantor lebih baik?','Kalau ada waktu senggang di kantor, biasanya ngapain?','Kebiasaan makan siang kamu di kantor kayak gimana?','Kalau bisa tuker kerjaan sehari sama siapa aja, kamu pilih siapa?','Apa hal receh yang sering jadi bahan becandaan di kantor?','Kalau libur mendadak, hal pertama yang kamu lakuin apa?','Skill kerja apa yang pengen banget kamu kuasain?','Apa satu hal yang bikin kamu betah di tempat kerja sekarang?'
       ]},
-      { name:'Obrolan Karier', color:'plum', topic:'deep', cards:[
+      { name:'Obrolan Karier', color:'plum', depth:'dalam', desc:'Pencapaian, burnout, dan arah karier.', cards:[
         'Apa pencapaian kerja yang paling kamu banggain tapi jarang diomongin?','Apa ketakutan terbesarmu soal kariermu ke depan?','Kapan terakhir kali kamu ngerasa dihargai di tempat kerja?','Apa yang bikin kamu ragu soal jalan karier yang kamu ambil sekarang?','Apa satu keputusan karier yang paling kamu syukuri?','Apa yang kamu butuhkan dari rekan kerja biar bisa kerja maksimal?','Apa definisi sukses versi kamu di dunia kerja?','Apa hal yang bikin kamu ragu buat speak up di kantor?','Kapan kamu ngerasa paling burnout, dan gimana caramu ngatasinnya?','Apa yang pengen kamu capai sebelum keluar dari peran sekarang?','Apa satu feedback yang paling mengubah caramu kerja?','Apa yang bikin kamu bertahan di tempat kerja saat lagi berat?','Apa harapanmu soal caramu dipimpin atau memimpin tim?','Apa yang kamu pelajari dari kegagalan terbesar di kariermu?','Bagaimana caramu menyeimbangkan ambisi kerja dan hidup pribadi?','Apa satu hal yang pengen kamu ubah dari budaya kerja sekarang?','Apa yang membuatmu ragu untuk mengambil risiko karier baru?','Siapa yang paling membentuk caramu memandang pekerjaan?','Apa arti "berkembang" dalam karier menurutmu sekarang?','Apa satu warisan yang pengen kamu tinggalkan dari pekerjaanmu?'
       ]},
-      { name:'Retro Tim', color:'teal', topic:'tim', cards:[
+      { name:'Retro Tim', color:'teal', depth:'ringan', desc:'Cara kerja bareng, feedback, dan yang perlu diubah.', tag:'Buat satu tim', cards:[
         'Kamu paling suka dikasih feedback lewat apa — langsung, chat, atau 1-on-1?','Pet peeve kerjamu apa?','Momen kerja bareng tim ini yang paling kamu inget?','Kapan kamu ngerasa tim ini paling kompak?','Satu hal yang tim ini lakuin dengan baik dan harus dipertahankan?','Satu kebiasaan tim yang pengen kamu ubah?','Kamu paling fokus kerja di jam berapa, dan kapan paling enak diajak meeting?','Cara terbaik minta bantuan ke kamu itu gimana?','Apa yang bikin kamu ngerasa dihargai di tim?','Skill apa yang kamu punya tapi jarang kepakai di sini?','Proyek apa yang paling bikin kamu belajar banyak?','Siapa di tim ini yang diam-diam banyak bantu kamu?','Kalau kamu jadi lead sehari, satu hal apa yang kamu ubah?','Tanda apa yang nunjukin kamu lagi kewalahan?','Meeting mana yang paling berguna buat kamu, dan mana yang cukup jadi email?','Apa yang bikin kamu gampang atau susah percaya sama rekan kerja?','Kalau berhasil, kamu lebih suka dirayain rame-rame atau diam-diam?','Apa yang kamu butuhin dari tim ini bulan depan?','Kesalahan tim apa yang akhirnya jadi pelajaran bagus?','Satu kata buat menggambarkan tim ini sekarang, dan satu kata yang kamu harapkan?'
       ]}
     ]
   },
-  { id:'pdkt', name:'PDKT / Baru Kenal', color:'brick',
+  { id:'pdkt', name:'PDKT / Baru Kenal', color:'brick', pair:true,
     desc:'Buat yang lagi deket sama orang baru — cair-cairan sampai obrolan yang lebih serius.',
+    theme:{ paper:'#FCF0E8', paperDark:'#2A1E19', back:'#9A4632', font:'grotesk', pattern:'stripes', radius:20, mark:'kenalan yuk' },
     decks:[
-      { name:'Cair Dulu', color:'amber', topic:'light', cards:[
+      { name:'Cair Dulu', color:'amber', depth:'ringan', desc:'First date, green flag, dan red flag receh.', cards:[
         'Apa yang bikin kamu tertarik buat kenalan sama aku?','Kalau first date ideal versi kamu, ngapain aja?','Apa hal pertama yang kamu perhatiin dari seseorang?','Red flag receh apa yang bikin kamu langsung mundur?','Green flag kecil apa yang bikin kamu makin tertarik?','Kalau lagi PDKT, kamu tipe yang gercep atau santai?','Apa yang bikin kamu nyaman ngobrol sama orang baru?','Kalau ditanya "kamu orangnya gimana", kamu jawab apa?','Apa hal yang biasanya bikin kamu deg-degan pas kenalan sama orang baru?','Kalau chat duluan, kamu tim yang mikir lama atau langsung kirim?','Apa first impression paling salah yang pernah orang kasih ke kamu?','Kalau lagi PDKT, hal apa yang bikin kamu makin penasaran?','Apa tempat ideal buat first date versi kamu?','Kalau lagi deket sama seseorang, kamu suka nunjukin perhatian lewat apa?','Apa yang bikin kamu yakin buat lanjut ke tahap yang lebih serius?','Kalau lagi PDKT, kamu lebih suka banyak nanya atau banyak cerita?','Apa hal kecil yang bisa bikin kamu naksir seseorang?','Kalau ketemu orang baru, kamu biasanya mulai obrolan dari topik apa?','Apa yang bikin kamu ilfeel duluan sama orang baru?','Kalau lagi deket, kamu lebih suka dikasih kejutan atau kepastian?'
       ]},
-      { name:'Lebih Serius', color:'brick', topic:'deep', cards:[
+      { name:'Lebih Serius', color:'brick', depth:'dalam', desc:'Apa yang dicari dalam hubungan, dan kenapa.', cards:[
         'Apa yang kamu cari dalam hubungan yang serius?','Apa pengalaman masa lalu yang masih memengaruhi caramu deket sama orang baru?','Apa ketakutan terbesarmu soal mulai hubungan baru?','Gimana caramu tahu kalau seseorang bisa dipercaya?','Apa nilai yang nggak bisa kamu tawar dalam hubungan?','Apa yang bikin kamu ragu buat lanjut ke hubungan serius?','Gimana caramu biasanya menghadapi konflik di hubungan sebelumnya?','Apa yang kamu pelajari dari hubungan sebelumnya?','Apa harapanmu soal komunikasi dalam hubungan?','Gimana caramu tahu kalau kamu udah siap komit?','Apa yang bikin kamu merasa aman dalam sebuah hubungan?','Apa satu hal yang penting buat kamu tapi jarang kamu omongin di awal kenalan?','Gimana pandanganmu soal menggabungkan hidup dan keluarga masing-masing?','Apa yang bikin kamu yakin seseorang serius sama kamu?','Apa arti kesetiaan buat kamu?','Gimana caramu pengen didukung kalau lagi menghadapi masalah besar?','Apa yang kamu butuhkan biar bisa terbuka sepenuhnya sama seseorang?','Apa satu pelajaran hidup yang membentuk caramu mencintai sekarang?','Apa harapanmu soal masa depan, dan gimana orang lain bisa jadi bagian dari itu?','Apa yang bikin kamu merasa dipahami sepenuhnya oleh seseorang?'
       ]}
     ]
   },
   { id:'komunitas', name:'Komunitas / Kelompok Kecil', color:'teal',
     desc:'Buat komsel, persekutuan, atau retreat — pecah es sampai saling jaga.',
+    theme:{ paper:'#ECF4F2', paperDark:'#16211F', back:'#1F4F4B', font:'serif', pattern:'rings', radius:18, mark:'bareng-bareng' },
     decks:[
-      { name:'Pecah Es', color:'amber', topic:'light', cards:[
+      { name:'Pecah Es', color:'amber', depth:'ringan', desc:'Kenalan dan cerita minggu ini.', cards:[
         'Gimana ceritanya kamu bisa gabung ke komunitas ini?','Kesibukan utamamu sehari-hari apa?','Apa hal yang lagi bikin kamu semangat minggu ini?','Kalau ada acara kumpul, kamu biasanya tim datang awal atau telat?','Satu fakta unik tentang kamu yang belum banyak orang tahu di sini?','Hobi apa yang lagi kamu tekuni sekarang?','Tempat favorit di kota ini buat kumpul rame-rame?','Kalau komunitas ini bikin acara, kamu pengen acaranya apa?','Peran apa yang biasanya kamu ambil di kelompok — pencair suasana, pendengar, atau penggerak?','Lagu apa yang pasti kamu nyanyiin kalau ada sesi nyanyi bareng?','Hal kecil apa yang bikin kamu ngerasa diterima di tempat baru?','Kalau kita pergi retreat, kamu pengen ke mana?','Siapa orang di kelompok ini yang pengen kamu kenal lebih dekat?','Kebiasaan mingguan apa yang bikin minggumu jalan?','Kamu tipe yang ngajak ngobrol duluan atau nunggu diajak?','Apa yang kamu harapkan dari kelompok ini tahun ini?','Hal apa yang bisa kamu tawarkan ke kelompok ini?','Kalau kelompok ini punya julukan, kamu usulin apa?','Momen kumpul paling seru yang pernah kamu alami di komunitas mana pun?','Satu kata yang menggambarkan minggumu?'
       ]},
-      { name:'Saling Jaga', color:'teal', topic:'deep', cards:[
+      { name:'Saling Jaga', color:'teal', depth:'dalam', desc:'Pergumulan, doa, dan dukungan satu sama lain.', cards:[
         'Apa hal yang lagi kamu pergumulkan dan pengen didoakan?','Kapan kamu ngerasa paling sendirian, bahkan di tengah orang banyak?','Apa yang bikin kamu susah terbuka di kelompok?','Dukungan kayak apa yang paling kamu butuhin dari kelompok ini sekarang?','Kapan kamu pernah ngerasa benar-benar ditolong oleh sebuah komunitas?','Apa hal yang kamu harap orang di sini tahu tentang kamu?','Gimana cara kita bisa saling ingetin tanpa bikin tersinggung?','Apa yang lagi Tuhan ajarkan ke kamu belakangan ini?','Musim hidup apa yang lagi kamu jalani sekarang?','Apa hal yang pengen kamu ubah dari dirimu, dan gimana kami bisa bantu?','Kapan terakhir kali kamu minta tolong, dan gimana rasanya?','Apa arti komunitas yang sehat buat kamu?','Pengalaman apa dari komunitas sebelumnya yang masih kamu bawa sampai sekarang?','Siapa di hidupmu yang lagi butuh perhatian lebih, dan gimana kita bisa ikut peduli?','Apa yang bikin kamu bertahan di masa-masa berat?','Apa satu hal yang kamu syukuri dari kelompok ini?','Komitmen kecil apa yang mau kamu ambil bulan ini?','Gimana kamu pengen dihubungi kalau lagi menghilang dari kelompok?','Apa yang kamu harap bisa kita alami bareng sebagai kelompok?','Kalau kelompok ini bubar suatu hari, apa yang pengen kamu inget?'
       ]}
     ]
   },
   { id:'diri', name:'Diri Sendiri', color:'gold', solo:true,
     desc:'Buat refleksi sendirian — catatan santai sampai ngobrol jujur sama diri sendiri.',
+    theme:{ paper:'#F6F1E4', paperDark:'#211F19', back:'#4E4335', font:'hand', pattern:'lines', radius:12, mark:'catatan' },
     decks:[
-      { name:'Catatan Harian', color:'sage', topic:'light', cards:[
+      { name:'Catatan Harian', color:'sage', depth:'ringan', desc:'Cek kabar singkat soal hari ini.', cards:[
         'Apa hal kecil yang bikin hari ini lumayan?','Apa yang lagi kamu dengerin atau tonton minggu ini?','Kalau hari ini dikasih judul, judulnya apa?','Tiga hal apa yang kamu syukuri hari ini?','Apa yang pengen kamu makan besok, dan kenapa?','Siapa yang pengen kamu kabarin sekarang?','Apa satu hal yang kamu selesaikan hari ini, sekecil apa pun?','Energimu hari ini dari skala 1 sampai 10 berapa, dan kenapa?','Apa hal baru yang kamu pelajari minggu ini?','Kalau besok libur, kamu mau ngapain?','Apa yang bikin kamu ketawa hari ini?','Barang apa yang lagi paling sering kamu pakai?','Tempat mana yang pengen kamu datengin bulan ini?','Kebiasaan kecil apa yang pengen kamu mulai minggu depan?','Apa yang bikin pagimu enak atau nggak enak hari ini?','Kalau bisa ngomong ke dirimu tadi pagi, kamu bilang apa?','Satu hal apa yang bisa kamu tunda tanpa masalah?','Apa yang lagi bikin kamu penasaran?','Momen apa hari ini yang pengen kamu inget?','Apa satu hal yang bisa bikin besok sedikit lebih baik?'
       ]},
-      { name:'Jujur sama Diri Sendiri', color:'plum', topic:'deep', cards:[
+      { name:'Jujur sama Diri Sendiri', color:'plum', depth:'dalam', desc:'Hal yang dihindari, dibutuhkan, dan perlu berubah.', cards:[
         'Apa yang lagi kamu hindari akhir-akhir ini?','Perasaan apa yang belum sempat kamu akui?','Apa yang sebenarnya kamu butuhkan, bukan cuma yang kamu inginkan?','Kapan terakhir kali kamu jadi diri sendiri sepenuhnya?','Apa yang kamu lakuin cuma karena takut mengecewakan orang lain?','Suara di kepalamu lebih sering jadi pendukung atau pengkritik?','Apa yang pengen kamu maafkan dari dirimu?','Kalau nggak ada yang menilai, kamu bakal hidup kayak gimana?','Apa satu hal yang kamu tahu harus berubah tapi belum kamu ubah?','Hubungan mana yang lagi butuh perhatianmu?','Apa yang bikin kamu ngerasa cukup, dan apa yang bikin kamu ngerasa kurang?','Batasan apa yang perlu kamu pasang?','Apa yang kamu pelajari dari kegagalan terakhirmu?','Hal apa yang dulu kamu impikan dan sekarang udah jadi kenyataan?','Ketakutan apa yang paling sering nahan kamu?','Kamu pengen jadi orang seperti apa lima tahun lagi, dan apa bedanya dengan sekarang?','Bagian mana dari hidupmu yang lagi kamu jalani dengan autopilot?','Apa yang pengen kamu bilang ke dirimu yang lebih muda?','Apa yang bikin kamu bangga tapi jarang kamu akui?','Keputusan kecil apa yang mau kamu ambil setelah membaca kartu ini?'
       ]}
     ]
@@ -343,20 +394,21 @@ const color = name => PALETTE[name] || name || PALETTE.sage;
 const $ = id => document.getElementById(id);
 
 const ui = {
-  tagline: $('tagline'), home: $('homeScreen'), deckScreen: $('deckScreen'),
-  audienceGrid: $('audienceGrid'), topicToggle: $('topicToggle'), deckPicker: $('deckPicker'),
+  tagline: $('tagline'), home: $('homeScreen'), deckScreen: $('deckScreen'), playScreen: $('playScreen'),
+  audienceGrid: $('audienceGrid'), depthFilter: $('depthFilter'), deckList: $('deckList'), crumb: $('crumb'),
   card: $('card'), cardFront: $('cardFront'), frontLabel: $('frontDeckLabel'),
   frontQuestion: $('frontQuestion'), frontNum: $('frontNum'),
   frontWild: $('frontWild'), frontFollow: $('frontFollow'),
-  count: $('count'), drawBtn: $('drawBtn'), backBtn: $('backBtn')
+  count: $('count'), drawBtn: $('drawBtn'), homeBtn: $('homeBtn'), decksBtn: $('decksBtn'),
+  backMark: $('backMark')
 };
 
-const state = { audience:null, topic:null, deck:null };
+const state = { audience:null, depth:'semua', deck:null };
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 /* A card is either 'Pertanyaan?' or { q:'Pertanyaan?', follow:'Lanjutan?' }. */
 const cardText = c => typeof c === 'string' ? c : c.q;
 const cardFollow = c => typeof c === 'string' ? null : (c.follow || null);
-const isDeep = (deck, topic) => deck.deep === true || (deck.deep !== false && topic && topic.id === 'deep');
+const isDeep = deck => deck.depth === 'dalam';
 
 /* Draw pile per deck object, so any deck from any source just works. */
 const pools = new Map();
@@ -370,13 +422,7 @@ function poolFor(deck){
 }
 function remaining(deck){ return pools.has(deck) ? pools.get(deck).length : deck.cards.length; }
 
-/* Which decks belong to a topic for the current audience. */
-function decksFor(audience, topic){
-  return topic.shared ? (topic.decks || []) : audience.decks.filter(d => d.topic === topic.id);
-}
-function topicsFor(audience){
-  return TOPICS.filter(t => decksFor(audience, t).length > 0);
-}
+const sharedDecksFor = audience => SHARED_DECKS.filter(d => !d.for || d.for.includes(audience.id));
 
 function button(className, text, onClick){
   const b = document.createElement('button');
@@ -384,8 +430,28 @@ function button(className, text, onClick){
   b.addEventListener('click', onClick);
   return b;
 }
-function setActive(container, active){ /* single-row button groups */
-  [...container.children].forEach(b => b.dataset.active = String(b === active));
+function el(className, text){
+  const d = document.createElement('div');
+  d.className = className; d.textContent = text;
+  return d;
+}
+
+function showScreen(name){
+  ui.home.hidden = name !== 'home';
+  ui.deckScreen.hidden = name !== 'decks';
+  ui.playScreen.hidden = name !== 'play';
+  window.scrollTo(0, 0);
+}
+
+/* A category's theme restyles the whole page; null restores the neutral home look. */
+function applyTheme(audience){
+  const t = (audience && audience.theme) || {};
+  const root = document.documentElement;
+  const vars = { '--t-paper':t.paper, '--t-paper-d':t.paperDark, '--t-back':t.back,
+                 '--t-radius':t.radius == null ? null : t.radius + 'px' };
+  Object.entries(vars).forEach(([k, v]) => v == null ? root.style.removeProperty(k) : root.style.setProperty(k, v));
+  ['font', 'pattern'].forEach(k => { if(t[k]) root.dataset[k] = t[k]; else delete root.dataset[k]; });
+  ui.backMark.textContent = t.mark || '?';
 }
 
 /* ---------- Screens ---------- */
@@ -394,66 +460,89 @@ function renderHome(){
   ui.audienceGrid.replaceChildren(...AUDIENCES.map(a => {
     const b = button('cat-card', '', () => openAudience(a));
     b.style.setProperty('--cat-color', color(a.color));
-    const deckCount = TOPICS.reduce((n, t) => n + decksFor(a, t).length, 0);
-    b.innerHTML = '<div class="cat-title"></div><div class="cat-desc"></div><div class="cat-meta"></div>';
-    b.querySelector('.cat-title').textContent = a.name;
-    b.querySelector('.cat-desc').textContent = a.desc;
-    b.querySelector('.cat-meta').textContent = deckCount + ' dek';
+    if(a.theme){ /* preview the category's look on its own card */
+      if(a.theme.paper) b.style.setProperty('--cat-paper', a.theme.paper);
+      if(a.theme.paperDark) b.style.setProperty('--cat-paper-d', a.theme.paperDark);
+      if(a.theme.font) b.dataset.font = a.theme.font;
+    }
+    b.append(el('cat-title', a.name), el('cat-desc', a.desc),
+             el('cat-meta', TEXT.deckCount(a.decks.length, sharedDecksFor(a).length)));
     return b;
   }));
 }
 
 function goHome(){
-  ui.home.hidden = false; ui.deckScreen.hidden = true;
+  applyTheme(null);
+  showScreen('home');
   ui.tagline.textContent = TEXT.homeTagline;
 }
 
 function openAudience(audience){
+  if(state.audience !== audience) state.depth = 'semua';
   state.audience = audience;
-  ui.home.hidden = true; ui.deckScreen.hidden = false;
+  applyTheme(audience);
+  renderDeckList();
+  showScreen('decks');
   ui.tagline.textContent = TEXT.deckTagline(audience.name);
-  const topics = topicsFor(audience);
-  const row = list => {
-    const r = document.createElement('div');
-    r.className = 'topic-row';
-    list.forEach(t => { const b = button('tier-btn', t.label, () => openTopic(t, b)); r.appendChild(b); });
-    return r;
-  };
-  const own = topics.filter(t => !t.shared), shared = topics.filter(t => t.shared);
-  const parts = [];
-  if(own.length) parts.push(row(own));
-  if(shared.length){
-    const label = document.createElement('div');
-    label.className = 'topic-label'; label.textContent = TEXT.sharedTopicsLabel;
-    parts.push(label, row(shared));
-  }
-  ui.topicToggle.replaceChildren(...parts);
-  openTopic(topics[0], ui.topicToggle.querySelector('.tier-btn'));
 }
 
-function openTopic(topic, btn){
-  state.topic = topic;
-  ui.topicToggle.querySelectorAll('.tier-btn').forEach(b => b.dataset.active = String(b === btn));
-  const decks = decksFor(state.audience, topic);
-  ui.deckPicker.replaceChildren(...decks.map(d => {
-    const b = button('deck-btn', d.name, () => selectDeck(d, b));
-    b.style.setProperty('--deck-color', color(d.color));
+function renderDepthFilter(){
+  const options = [['semua', TEXT.allDepths], ...Object.entries(TEXT.depths)];
+  ui.depthFilter.replaceChildren(...options.map(([id, label]) => {
+    const b = button('tier-btn', label, () => { state.depth = id; renderDeckList(); });
+    b.dataset.active = String(state.depth === id);
+    b.setAttribute('aria-pressed', String(state.depth === id));
     return b;
   }));
-  selectDeck(decks[0], ui.deckPicker.firstChild);
 }
 
-function selectDeck(deck, btn){
+function deckCard(deck){
+  const b = button('deck-card', '', () => openDeck(deck));
+  b.style.setProperty('--deck-color', color(deck.color));
+  const head = el('deck-head', '');
+  head.append(el('deck-name', deck.name), el('deck-count', TEXT.cardCount(deck.cards.length)));
+  const meta = el('deck-meta', '');
+  meta.append(el('badge ' + deck.depth, TEXT.depths[deck.depth] || deck.depth));
+  if(deck.tag) meta.append(el('badge tag', deck.tag));
+  b.append(head, el('deck-desc', deck.desc || ''), meta);
+  return b;
+}
+
+function renderDeckList(){
+  renderDepthFilter();
+  const a = state.audience;
+  const match = d => state.depth === 'semua' || d.depth === state.depth;
+  const groups = [[TEXT.ownDecks(a.name), a.decks], [TEXT.sharedDecks, sharedDecksFor(a)]];
+  const parts = [];
+  groups.forEach(([label, decks]) => {
+    const shown = decks.filter(match);
+    if(!shown.length) return;
+    parts.push(el('group-label', label), ...shown.map(deckCard));
+  });
+  if(!parts.length) parts.push(el('group-label', TEXT.noDecks));
+  ui.deckList.replaceChildren(...parts);
+}
+
+function openDeck(deck){
   state.deck = deck;
-  setActive(ui.deckPicker, btn);
   const c = color(deck.color);
   document.documentElement.style.setProperty('--accent', c);
   ui.cardFront.style.setProperty('--deck-color', c);
+  const name = document.createElement('b');
+  name.textContent = deck.name;
+  ui.crumb.replaceChildren(state.audience.name + ' · ' + (TEXT.depths[deck.depth] || deck.depth) + ' · ', name);
+  ui.tagline.textContent = deck.desc || '';
   ui.card.dataset.flipped = 'false';
   ui.frontQuestion.textContent = '';
   ui.frontWild.hidden = true;
   ui.frontFollow.hidden = true;
   updateCount();
+  showScreen('play');
+}
+
+function backToDecks(){
+  showScreen('decks');
+  ui.tagline.textContent = TEXT.deckTagline(state.audience.name);
 }
 
 /* ---------- Card ---------- */
@@ -470,16 +559,17 @@ function drawCard(){
   ui.frontQuestion.textContent = cardText(c);
   ui.frontLabel.textContent = deck.name;
 
-  const follow = cardFollow(c) || (isDeep(deck, state.topic) ? pick(FOLLOW_UPS) : null);
+  const follow = cardFollow(c) || (isDeep(deck) ? pick(FOLLOW_UPS) : null);
   ui.frontFollow.hidden = !follow;
   ui.frontFollow.textContent = follow ? TEXT.followUpPrefix + follow : '';
 
-  const wild = !state.audience.solo && WILDCARDS.length && Math.random() < WILDCARD_CHANCE;
+  const wildcards = state.audience.pair ? WILDCARDS : WILDCARDS.concat(GROUP_WILDCARDS);
+  const wild = !state.audience.solo && wildcards.length && Math.random() < WILDCARD_CHANCE;
   ui.frontWild.hidden = !wild;
   if(wild){
     ui.frontWild.innerHTML = '<b></b><span></span>';
     ui.frontWild.querySelector('b').textContent = TEXT.wildcardTitle;
-    ui.frontWild.querySelector('span').textContent = pick(WILDCARDS);
+    ui.frontWild.querySelector('span').textContent = pick(wildcards);
   }
   ui.frontNum.textContent = (idx + 1) + ' / ' + deck.cards.length;
   ui.card.dataset.flipped = 'false';
@@ -495,15 +585,29 @@ function flipCard(){
 ui.card.addEventListener('click', flipCard);
 ui.card.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); flipCard(); } });
 ui.drawBtn.addEventListener('click', drawCard);
-ui.backBtn.addEventListener('click', goHome);
+ui.homeBtn.addEventListener('click', goHome);
+ui.decksBtn.addEventListener('click', backToDecks);
 
 /* Warn in the console about data mistakes instead of failing silently. */
 (function checkData(){
-  const topicIds = new Set(TOPICS.map(t => t.id));
-  AUDIENCES.forEach(a => a.decks.forEach(d => {
-    if(!topicIds.has(d.topic)) console.warn('Dek "' + d.name + '" di ' + a.name + ' pakai topik tidak dikenal: ' + d.topic);
-    if(!d.cards || !d.cards.length) console.warn('Dek "' + d.name + '" di ' + a.name + ' belum punya kartu.');
-  }));
+  const audienceIds = new Set(AUDIENCES.map(a => a.id));
+  const check = (d, where) => {
+    if(!(d.depth in TEXT.depths)) console.warn('Dek "' + d.name + '" di ' + where + ' pakai depth tidak dikenal: ' + d.depth);
+    if(!d.desc) console.warn('Dek "' + d.name + '" di ' + where + ' belum punya desc.');
+    if(!d.cards || !d.cards.length) console.warn('Dek "' + d.name + '" di ' + where + ' belum punya kartu.');
+  };
+  AUDIENCES.forEach(a => a.decks.forEach(d => check(d, a.name)));
+  const FONTS = ['serif', 'serif-italic', 'grotesk', 'sans', 'hand'];
+  const PATTERNS = ['glow', 'dots', 'gingham', 'grid', 'stripes', 'rings', 'lines'];
+  AUDIENCES.forEach(a => {
+    const t = a.theme || {};
+    if(t.font && !FONTS.includes(t.font)) console.warn('Kategori ' + a.name + ' pakai font tidak dikenal: ' + t.font);
+    if(t.pattern && !PATTERNS.includes(t.pattern)) console.warn('Kategori ' + a.name + ' pakai pattern tidak dikenal: ' + t.pattern);
+  });
+  SHARED_DECKS.forEach(d => {
+    check(d, 'topik umum');
+    (d.for || []).forEach(id => { if(!audienceIds.has(id)) console.warn('Dek "' + d.name + '" pakai kategori tidak dikenal di for: ' + id); });
+  });
 })();
 
 renderHome();
